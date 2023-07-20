@@ -70,6 +70,7 @@ kotlin {
 
 
     sourceSets {
+        val coroutinesVersion: String by project
         val kotestVersion: String by project
 
         val commonMain by getting
@@ -78,6 +79,7 @@ kotlin {
                 implementation(kotlin("test"))
 
                 implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }
         }
 
