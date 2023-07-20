@@ -6,11 +6,11 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import kotlin.test.Test
 
-class AtomicIntTest {
+class AtomicLongTest {
 
     @Test
     fun changeValue() = runTest {
-        val underTest = AtomicInt(7)
+        val underTest = AtomicLong(7)
 
         withContext(Dispatchers.Default) {
             underTest.set(42)
@@ -21,9 +21,9 @@ class AtomicIntTest {
 
     @Test
     fun incrementAndGet() = runTest {
-        val initialValue = 41
+        val initialValue = 41L
 
-        val underTest = AtomicInt(initialValue)
+        val underTest = AtomicLong(initialValue)
 
         withContext(Dispatchers.Default) {
             underTest.incrementAndGet().shouldBe(initialValue + 1)
@@ -34,9 +34,9 @@ class AtomicIntTest {
 
     @Test
     fun decrementAndGet() = runTest {
-        val initialValue = 43
+        val initialValue = 43L
 
-        val underTest = AtomicInt(initialValue)
+        val underTest = AtomicLong(initialValue)
 
         withContext(Dispatchers.Default) {
             underTest.decrementAndGet().shouldBe(initialValue - 1)
@@ -47,10 +47,10 @@ class AtomicIntTest {
 
     @Test
     fun addAndGet() = runTest {
-        val initialValue = 1
-        val delta = 41
+        val initialValue = 1L
+        val delta = 41L
 
-        val underTest = AtomicInt(initialValue)
+        val underTest = AtomicLong(initialValue)
 
         withContext(Dispatchers.Default) {
             underTest.addAndGet(delta).shouldBe(initialValue + delta)
@@ -61,9 +61,9 @@ class AtomicIntTest {
 
     @Test
     fun getAndIncrement() = runTest {
-        val initialValue = 41
+        val initialValue = 41L
 
-        val underTest = AtomicInt(initialValue)
+        val underTest = AtomicLong(initialValue)
 
         withContext(Dispatchers.Default) {
             underTest.getAndIncrement().shouldBe(initialValue)
@@ -74,9 +74,9 @@ class AtomicIntTest {
 
     @Test
     fun getAndDecrement() = runTest {
-        val initialValue = 43
+        val initialValue = 43L
 
-        val underTest = AtomicInt(initialValue)
+        val underTest = AtomicLong(initialValue)
 
         withContext(Dispatchers.Default) {
             underTest.getAndDecrement().shouldBe(initialValue)
@@ -87,10 +87,10 @@ class AtomicIntTest {
 
     @Test
     fun getAndAdd() = runTest {
-        val initialValue = 1
-        val delta = 41
+        val initialValue = 1L
+        val delta = 41L
 
-        val underTest = AtomicInt(initialValue)
+        val underTest = AtomicLong(initialValue)
 
         withContext(Dispatchers.Default) {
             underTest.getAndAdd(delta).shouldBe(initialValue)

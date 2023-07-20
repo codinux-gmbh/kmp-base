@@ -1,41 +1,41 @@
 package net.codinux.kotlin.concurrent
 
-actual class AtomicInt actual constructor(private var value: Int) {
+actual class AtomicLong actual constructor(private var value: Long) {
 
     actual fun get() = this.value
 
-    actual fun set(newValue: Int) {
+    actual fun set(newValue: Long) {
         this.value = newValue
     }
 
-    actual fun incrementAndGet(): Int {
+    actual fun incrementAndGet(): Long {
         this.value += 1
         return get()
     }
 
-    actual fun decrementAndGet(): Int {
+    actual fun decrementAndGet(): Long {
         this.value -= 1
         return get()
     }
 
-    actual fun addAndGet(delta: Int): Int {
+    actual fun addAndGet(delta: Long): Long {
         this.value += delta
         return get()
     }
 
-    actual fun getAndIncrement(): Int {
+    actual fun getAndIncrement(): Long {
         val oldValue = get()
         this.value += 1
         return oldValue
     }
 
-    actual fun getAndDecrement(): Int {
+    actual fun getAndDecrement(): Long {
         val oldValue = get()
         this.value -= 1
         return oldValue
     }
 
-    actual fun getAndAdd(delta: Int): Int {
+    actual fun getAndAdd(delta: Long): Long {
         val oldValue = get()
         this.value += delta
         return oldValue
