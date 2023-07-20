@@ -91,6 +91,16 @@ kotlin {
 
         val nativeMain by getting
         val nativeTest by getting
+
+        val linuxAndMingwMain by creating {
+            dependsOn(nativeMain)
+        }
+        val linuxMain by getting {
+            dependsOn(linuxAndMingwMain)
+        }
+        val mingwMain by getting {
+            dependsOn(linuxAndMingwMain)
+        }
     }
 }
 
