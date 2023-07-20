@@ -70,10 +70,14 @@ kotlin {
 
 
     sourceSets {
+        val kotestVersion: String by project
+
         val commonMain by getting
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
+
+                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
             }
         }
 
