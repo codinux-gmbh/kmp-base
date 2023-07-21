@@ -32,13 +32,13 @@ open class OpenArrayList<E>(private val impl: MutableList<E>) : MutableList<E> {
 
     override fun get(index: Int) = impl.get(index)
 
-    override fun add(e: E) = impl.add(e)
+    override fun add(element: E) = impl.add(element)
 
     override fun add(index: Int, element: E) = impl.add(index, element)
 
     override fun set(index: Int, element: E) = impl.set(index, element)
 
-    override fun remove(elements: E) = impl.remove(elements)
+    override fun remove(element: E) = impl.remove(element)
 
     override fun removeAt(index: Int) = impl.removeAt(index)
 
