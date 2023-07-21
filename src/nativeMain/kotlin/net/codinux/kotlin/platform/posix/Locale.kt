@@ -34,7 +34,7 @@ object Locale {
             ?: getValueForCategory(LC_ALL)
             ?: getValueForCategory(LC_MESSAGES)
             ?: platform.posix.getenv("LANG")?.toKString()
-            ?: "en-US" // fallback value
+            ?: "en_US" // fallback value
 
         return parseToLocale(language)
     }
@@ -42,7 +42,10 @@ object Locale {
     internal fun parseToLocale(locale: String): Locale {
         // the format is language_country.encoding@variant, encoding and variant are optional
 
-        val indexOfUnderscore = locale.indexOf('_')
+        var indexOfUnderscore = locale.indexOf('_')
+        if (indexOfUnderscore < 0) {
+            indexOfUnderscore = locale.indexOf('-') // Apple systems use '-' instead of '_'
+        }
         val indexOfDot = locale.indexOf('.')
         val indexOfAt = locale.indexOf('@')
 
