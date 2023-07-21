@@ -1,16 +1,13 @@
 package net.codinux.kotlin.util
 
-import io.kotest.common.ExperimentalKotest
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.ints.shouldBeBetween
-import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 
-@ExperimentalKotest
 class LocaleTest {
 
     @Test
-    fun getSystemDefaultLocale() = runTest { // runTest { } is only needed for io.kotest.assertions.any { }
+    fun getSystemDefaultLocale() {
         val result = Locale.getDefault()
 
         // the language either has 2-3 or 5-8 characters
