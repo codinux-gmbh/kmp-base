@@ -1,5 +1,8 @@
 package net.codinux.kotlin.concurrent
 
+import platform.Foundation.NSOperationQueue
+import platform.Foundation.NSThread
+
 actual class Thread(private val thread: NSThread) {
 
     actual companion object {
@@ -28,11 +31,14 @@ actual class Thread(private val thread: NSThread) {
 
     val isMainThread: Boolean = thread.isMainThread
 
-    val isExecuting = thread.isExecuting
+    val isExecuting: Boolean
+        get() = thread.isExecuting()
 
-    val isFinished = thread.isFinished
+    val isFinished: Boolean
+        get() = thread.isFinished()
 
-    val isCancelled = thread.isCancelled
+    val isCancelled: Boolean
+        get() = thread.isCancelled()
 
     fun setThreadLocal() {
 //        thread.threadDictionary
@@ -44,7 +50,7 @@ actual class Thread(private val thread: NSThread) {
 
 
     actual fun getStackTrace(): List<String> {
-        return NSThread.callStackSymbols.map { it }
+        return NSThread.callStackSymbols.map { it.toString() }
     }
 
 }
