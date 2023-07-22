@@ -50,7 +50,9 @@ actual class Thread(private val thread: NSThread) {
 
 
     actual fun getStackTrace(): List<String> {
-        return NSThread.callStackSymbols.map { it.toString() }
+        return NSThread.callStackSymbols
+            .drop(1) // skip invocation of Exception constructor and this method
+            .map { it.toString() }
     }
 
 }
