@@ -8,36 +8,22 @@ actual class AtomicLong actual constructor(private var value: Long) {
         this.value = newValue
     }
 
-    actual fun incrementAndGet(): Long {
-        this.value += 1
-        return get()
-    }
+    actual fun incrementAndGet() = addAndGet(1)
 
-    actual fun decrementAndGet(): Long {
-        this.value -= 1
-        return get()
-    }
+    actual fun decrementAndGet() = addAndGet(-1)
 
     actual fun addAndGet(delta: Long): Long {
-        this.value += delta
+        set(get() + delta)
         return get()
     }
 
-    actual fun getAndIncrement(): Long {
-        val oldValue = get()
-        this.value += 1
-        return oldValue
-    }
+    actual fun getAndIncrement() = getAndAdd(1)
 
-    actual fun getAndDecrement(): Long {
-        val oldValue = get()
-        this.value -= 1
-        return oldValue
-    }
+    actual fun getAndDecrement() = getAndAdd(-1)
 
     actual fun getAndAdd(delta: Long): Long {
         val oldValue = get()
-        this.value += delta
+        set(oldValue + delta)
         return oldValue
     }
 

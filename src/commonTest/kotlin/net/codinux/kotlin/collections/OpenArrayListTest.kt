@@ -3,24 +3,15 @@ package net.codinux.kotlin.collections
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import net.codinux.kotlin.collections.CollectionsTestData.CountElements
+import net.codinux.kotlin.collections.CollectionsTestData.ListTestData
 import kotlin.test.Test
 
 class OpenArrayListTest {
 
-    companion object {
-        private const val CountElements = 12
-
-        private val TestData = mutableListOf<String>().apply {
-            for (i in 0..< CountElements) {
-                add(i.toString())
-            }
-        }
-    }
-
-
     @Test
     fun getSize() {
-        val underTest = OpenArrayList(TestData)
+        val underTest = OpenArrayList(ListTestData)
 
         underTest.shouldHaveSize(CountElements)
     }
@@ -34,42 +25,42 @@ class OpenArrayListTest {
 
     @Test
     fun isNotEmpty() {
-        val underTest = OpenArrayList(TestData)
+        val underTest = OpenArrayList(ListTestData)
 
         underTest.isNotEmpty().shouldBeTrue()
     }
 
     @Test
     fun iterationOrderRemains() {
-        val underTest = OpenArrayList(TestData)
+        val underTest = OpenArrayList(ListTestData)
 
-        for (i in 0..< CountElements) {
-            TestData[i].shouldBe(underTest[i])
+        CollectionsTestData.forAllElements { index ->
+            ListTestData[index].shouldBe(underTest[index])
         }
     }
 
     @Test
     fun indexOf() {
-        val underTest = OpenArrayList(TestData)
+        val underTest = OpenArrayList(ListTestData)
 
-        for (index in 0..< CountElements) {
-            underTest.indexOf(TestData[index]).shouldBe(index)
+        CollectionsTestData.forAllElements { index ->
+            underTest.indexOf(ListTestData[index]).shouldBe(index)
         }
     }
 
     @Test
     fun contains() {
-        val underTest = OpenArrayList(TestData)
+        val underTest = OpenArrayList(ListTestData)
 
-        for (index in 0..< CountElements) {
-            underTest.contains(TestData[index]).shouldBeTrue()
+        CollectionsTestData.forAllElements { index ->
+            underTest.contains(ListTestData[index]).shouldBeTrue()
         }
     }
 
     @Test
     fun containsAll() {
-        val underTest = OpenArrayList(TestData)
+        val underTest = OpenArrayList(ListTestData)
 
-        underTest.containsAll(TestData).shouldBeTrue()
+        underTest.containsAll(ListTestData).shouldBeTrue()
     }
 }

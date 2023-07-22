@@ -8,32 +8,18 @@ actual class AtomicInt actual constructor(private var value: Int) {
         this.value = newValue
     }
 
-    actual fun incrementAndGet(): Int {
-        this.value += 1
-        return get()
-    }
+    actual fun incrementAndGet() = addAndGet(1)
 
-    actual fun decrementAndGet(): Int {
-        this.value -= 1
-        return get()
-    }
+    actual fun decrementAndGet() = addAndGet(-1)
 
     actual fun addAndGet(delta: Int): Int {
         this.value += delta
         return get()
     }
 
-    actual fun getAndIncrement(): Int {
-        val oldValue = get()
-        this.value += 1
-        return oldValue
-    }
+    actual fun getAndIncrement() = getAndAdd(1)
 
-    actual fun getAndDecrement(): Int {
-        val oldValue = get()
-        this.value -= 1
-        return oldValue
-    }
+    actual fun getAndDecrement() = getAndAdd(-1)
 
     actual fun getAndAdd(delta: Int): Int {
         val oldValue = get()

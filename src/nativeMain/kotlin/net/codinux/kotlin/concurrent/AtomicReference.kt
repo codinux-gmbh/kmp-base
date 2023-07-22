@@ -1,6 +1,6 @@
 package net.codinux.kotlin.concurrent
 
-import kotlin.concurrent.AtomicReference
+import kotlin.native.concurrent.AtomicReference
 
 actual class AtomicReference<T> actual constructor(value: T?) {
 
@@ -12,7 +12,16 @@ actual class AtomicReference<T> actual constructor(value: T?) {
         impl.value = newValue
     }
 
-    actual fun getAndSet(newValue: T?) = impl.getAndSet(newValue)
+    // TODO: after upgrading to Kotlin 1.9 use impl.getAndSet(newValue)
+    actual fun getAndSet(newValue: T?): T? {
+        var oldValue = get()
+
+        while (impl.compareAndSet(oldValue, newValue) == false) {
+            oldValue = get()
+        }
+
+        return oldValue
+    }
 
     override fun toString() = get().toString()
 

@@ -3,24 +3,16 @@ package net.codinux.kotlin.collections
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import net.codinux.kotlin.collections.CollectionsTestData.CountElements
+import net.codinux.kotlin.collections.CollectionsTestData.SetTestData
+import net.codinux.kotlin.collections.CollectionsTestData.forAllElements
 import kotlin.test.Test
 
 class ImmutableCollectionTest {
 
-    companion object {
-        private const val CountElements = 12
-
-        private val TestData = mutableSetOf<String>().apply {
-            for (i in 0..< CountElements) {
-                add(i.toString())
-            }
-        }
-    }
-
-
     @Test
     fun getSize() {
-        val underTest = ImmutableCollection(TestData)
+        val underTest = ImmutableCollection(SetTestData)
 
         underTest.shouldHaveSize(CountElements)
     }
@@ -34,33 +26,34 @@ class ImmutableCollectionTest {
 
     @Test
     fun isNotEmpty() {
-        val underTest = ImmutableCollection(TestData)
+        val underTest = ImmutableCollection(SetTestData)
 
         underTest.isNotEmpty().shouldBeTrue()
     }
 
     @Test
     fun indexOf() {
-        val underTest = ImmutableCollection(TestData)
+        val underTest = ImmutableCollection(SetTestData)
 
-        for (index in 0..< CountElements) {
+        forAllElements { index ->
             underTest.indexOf(index.toString()).shouldBe(index)
         }
     }
 
     @Test
     fun contains() {
-        val underTest = ImmutableCollection(TestData)
+        val underTest = ImmutableCollection(SetTestData)
 
-        for (index in 0..< CountElements) {
+        forAllElements { index ->
             underTest.contains(index.toString()).shouldBeTrue()
         }
     }
 
     @Test
     fun containsAll() {
-        val underTest = ImmutableCollection(TestData)
+        val underTest = ImmutableCollection(SetTestData)
 
-        underTest.containsAll(TestData).shouldBeTrue()
+        underTest.containsAll(SetTestData).shouldBeTrue()
     }
+
 }

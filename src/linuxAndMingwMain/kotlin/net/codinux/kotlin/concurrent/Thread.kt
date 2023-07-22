@@ -1,6 +1,5 @@
 package net.codinux.kotlin.concurrent
 
-import kotlin.experimental.ExperimentalNativeApi
 import kotlin.native.concurrent.Worker
 
 actual class Thread(private val worker: Worker) {
@@ -24,7 +23,6 @@ actual class Thread(private val worker: Worker) {
     val id: Long = worker.id.toLong()
 
 
-    @OptIn(ExperimentalNativeApi::class)
     actual fun getStackTrace(): List<String> {
         return Exception().getStackTrace().asList()
             .drop(3) // remove invocation of Throwable constructor, Exception constructor and this method

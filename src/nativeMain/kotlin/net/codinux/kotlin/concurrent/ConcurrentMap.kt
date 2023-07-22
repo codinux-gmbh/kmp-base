@@ -1,6 +1,6 @@
 package net.codinux.kotlin.concurrent
 
-import kotlin.concurrent.AtomicReference
+import kotlin.native.concurrent.AtomicReference
 
 actual open class ConcurrentMap<K, V> {
 

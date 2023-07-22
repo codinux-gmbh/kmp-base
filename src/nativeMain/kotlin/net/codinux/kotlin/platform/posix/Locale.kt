@@ -21,7 +21,6 @@ const val LC_MEASUREMENT = 11
 const val LC_IDENTIFICATION = 12
 
 
-@OptIn(ExperimentalForeignApi::class)
 object Locale {
 
     fun getSystemLocale(): Locale {

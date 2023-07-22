@@ -3,24 +3,16 @@ package net.codinux.kotlin.collections
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import net.codinux.kotlin.collections.CollectionsTestData.CountElements
+import net.codinux.kotlin.collections.CollectionsTestData.ListTestData
+import net.codinux.kotlin.collections.CollectionsTestData.forAllElements
 import kotlin.test.Test
 
 class ImmutableListTest {
 
-    companion object {
-        private const val CountElements = 12
-
-        private val TestData = mutableListOf<String>().apply {
-            for (i in 0..< CountElements) {
-                add(i.toString())
-            }
-        }
-    }
-
-
     @Test
     fun getSize() {
-        val underTest = ImmutableList(TestData)
+        val underTest = ImmutableList(ListTestData)
 
         underTest.shouldHaveSize(CountElements)
     }
@@ -34,42 +26,43 @@ class ImmutableListTest {
 
     @Test
     fun isNotEmpty() {
-        val underTest = ImmutableList(TestData)
+        val underTest = ImmutableList(ListTestData)
 
         underTest.isNotEmpty().shouldBeTrue()
     }
 
     @Test
     fun iterationOrderRemains() {
-        val underTest = ImmutableList(TestData)
+        val underTest = ImmutableList(ListTestData)
 
-        for (i in 0..< CountElements) {
-            TestData[i].shouldBe(underTest[i])
+        forAllElements { index ->
+            ListTestData[index].shouldBe(underTest[index])
         }
     }
 
     @Test
     fun indexOf() {
-        val underTest = ImmutableList(TestData)
+        val underTest = ImmutableList(ListTestData)
 
-        for (index in 0..< CountElements) {
-            underTest.indexOf(TestData[index]).shouldBe(index)
+        forAllElements { index ->
+            underTest.indexOf(ListTestData[index]).shouldBe(index)
         }
     }
 
     @Test
     fun contains() {
-        val underTest = ImmutableList(TestData)
+        val underTest = ImmutableList(ListTestData)
 
-        for (index in 0..< CountElements) {
-            underTest.contains(TestData[index]).shouldBeTrue()
+        forAllElements { index ->
+            underTest.contains(ListTestData[index]).shouldBeTrue()
         }
     }
 
     @Test
     fun containsAll() {
-        val underTest = ImmutableList(TestData)
+        val underTest = ImmutableList(ListTestData)
 
-        underTest.containsAll(TestData).shouldBeTrue()
+        underTest.containsAll(ListTestData).shouldBeTrue()
     }
+
 }
