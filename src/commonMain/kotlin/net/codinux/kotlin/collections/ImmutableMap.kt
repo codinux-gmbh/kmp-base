@@ -2,6 +2,9 @@ package net.codinux.kotlin.collections
 
 class ImmutableMap<K, V>(private val wrapped: Map<K, V>) : Map<K, V> {
 
+    constructor(vararg entries: Pair<K, V>) : this(entries.toMap())
+
+
     override val size = wrapped.size
 
     override val keys = wrapped.keys

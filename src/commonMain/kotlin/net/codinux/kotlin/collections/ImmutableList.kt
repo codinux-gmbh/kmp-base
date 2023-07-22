@@ -1,6 +1,9 @@
 package net.codinux.kotlin.collections
 
-class ImmutableList<T>(private val wrapped: List<T>) : List<T> {
+class ImmutableList<E>(private val wrapped: List<E>) : List<E> {
+
+    constructor(vararg elements: E) : this(elements.asList())
+
 
     override val size = wrapped.size
 
@@ -8,13 +11,13 @@ class ImmutableList<T>(private val wrapped: List<T>) : List<T> {
 
     override fun get(index: Int) = wrapped.get(index)
 
-    override fun indexOf(element: T) = wrapped.indexOf(element)
+    override fun indexOf(element: E) = wrapped.indexOf(element)
 
-    override fun lastIndexOf(element: T) = wrapped.lastIndexOf(element)
+    override fun lastIndexOf(element: E) = wrapped.lastIndexOf(element)
 
-    override fun contains(element: T) = wrapped.contains(element)
+    override fun contains(element: E) = wrapped.contains(element)
 
-    override fun containsAll(elements: Collection<T>) = wrapped.containsAll(elements)
+    override fun containsAll(elements: Collection<E>) = wrapped.containsAll(elements)
 
     override fun iterator() = wrapped.iterator()
 

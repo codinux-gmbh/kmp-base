@@ -8,6 +8,8 @@ open class OpenArrayList<E>(private val impl: MutableList<E>) : MutableList<E> {
 
     constructor(elements: Collection<E>) : this(ArrayList(elements))
 
+    constructor(vararg elements: E): this(elements.asList())
+
 
     override val size: Int
         get() = impl.size
