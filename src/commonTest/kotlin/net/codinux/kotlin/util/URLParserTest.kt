@@ -1,0 +1,242 @@
+package net.codinux.kotlin.util
+
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
+import kotlin.test.Test
+
+class URLParserTest {
+
+    private val underTest = URLParser()
+
+
+    @Test
+    fun schemeWithoutColon() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http")
+        }
+    }
+
+    @Test
+    fun schemeWithoutSlash() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http:")
+        }
+    }
+
+
+    @Test
+    fun schemeWithEmptyPath() {
+        val result = underTest.parse("http:/")
+
+        assertUrlParts(result, "http", null)
+    }
+
+    @Test
+    fun schemeAndPath() {
+        val result = underTest.parse("http:/index.html")
+
+        assertUrlParts(result, "http", null, "index.html")
+    }
+
+
+    @Test
+    fun schemeAndDoubleSlashWithoutHost() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://")
+        }
+    }
+
+    @Test
+    fun schemeAndLocalhost() {
+        val result = underTest.parse("https://localhost")
+
+        assertUrlParts(result, "https", "localhost")
+    }
+
+    @Test
+    fun schemeAndDomainNameWithoutTLD() {
+        val result = underTest.parse("https://codinux") // TODO: add check that TLD is missing
+
+        assertUrlParts(result, "https", "codinux")
+    }
+
+    @Test
+    fun schemeAndHost() {
+        val result = underTest.parse("https://codinux.net:5432")
+
+        assertUrlParts(result, "https", "codinux.net", port = 5432)
+    }
+
+    @Test
+    fun schemeHostAndSubdomain() {
+        val result = underTest.parse("https://www.codinux.net")
+
+        assertUrlParts(result, "https", "www.codinux.net")
+    }
+
+    @Test
+    fun schemeHostSubdomainAndPort() {
+        val result = underTest.parse("https://staging.codinux.net:9092")
+
+        assertUrlParts(result, "https", "staging.codinux.net", port = 9092)
+    }
+
+
+    @Test
+    fun ipv4Loopback() {
+        val result = underTest.parse("http://127.0.0.0")
+
+        assertUrlParts(result, "http", "127.0.0.0")
+    }
+
+    @Test
+    fun ipv4LoopbackAndPort() {
+        val result = underTest.parse("http://127.0.0.0:8080")
+
+        assertUrlParts(result, "http", "127.0.0.0", port = 8080)
+    }
+
+
+    @Test
+    fun invalidIPv6ClosingBracketIsMissing() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://[::1")
+        }
+    }
+
+    @Test
+    fun invalidIPv6_OpeningBracketIsMissing() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://::1]")
+        }
+    }
+
+    @Test
+    fun invalidIPv6_TwoClosingBrackets() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://[::1]]")
+        }
+    }
+
+    @Test
+    fun invalidIPv6TwoOpeningBrackets() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://[::1][")
+        }
+    }
+
+    @Test
+    fun invalidIPv6_IPv4InSquareBrackets() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://[192.168.0.1]")
+        }
+    }
+
+    @Test
+    fun ipv6Loopback() {
+        val result = underTest.parse("http://[::1]")
+
+        assertUrlParts(result, "http", "::1")
+    }
+
+    @Test
+    fun ipv6FullLoopback() {
+        val result = underTest.parse("http://[0000:0000:0000:0000:0000:0000:0000:0001]")
+
+        assertUrlParts(result, "http", "0000:0000:0000:0000:0000:0000:0000:0001")
+    }
+
+    @Test
+    fun ipv6() {
+        val result = underTest.parse("http://[fe80::20c:29ff:fee2:1de]")
+
+        assertUrlParts(result, "http", "fe80::20c:29ff:fee2:1de")
+    }
+
+    @Test
+    fun ipv6_2() {
+        val result = underTest.parse("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]")
+
+        assertUrlParts(result, "http", "2001:0db8:85a3:0000:0000:8a2e:0370:7334")
+    }
+
+    @Test
+    fun ipv6_3() {
+        val result = underTest.parse("http://[FE80:0000:0000:0000:0202:B3FF:FE1E:8329]")
+
+        assertUrlParts(result, "http", "FE80:0000:0000:0000:0202:B3FF:FE1E:8329")
+    }
+
+    @Test
+    fun ipv6AndPort() {
+        val result = underTest.parse("http://[fe80::20c:29ff:fee2:1de]:8080")
+
+        assertUrlParts(result, "http", "fe80::20c:29ff:fee2:1de", port = 8080)
+    }
+
+    @Test
+    fun ipv6IllegalCharacterBeforePort() {
+        shouldThrow<IllegalArgumentException> {
+            underTest.parse("http://[fe80::20c:29ff:fee2:1de]1:8080")
+        }
+    }
+
+
+    @Test
+    fun usernameAndHost() {
+        val result = underTest.parse("https://user27@staging.codinux.net")
+
+        assertUrlParts(result, "https", "staging.codinux.net", username = "user27")
+    }
+
+    @Test
+    fun usernamePasswordAndHost() {
+        val result = underTest.parse("https://user27:admin123@staging.codinux.net")
+
+        assertUrlParts(result, "https", "staging.codinux.net", username = "user27", password = "admin123")
+    }
+
+    @Test
+    fun usernameHostAndPort() {
+        val result = underTest.parse("https://user27@staging.codinux.net:5432")
+
+        assertUrlParts(result, "https", "staging.codinux.net", port = 5432, username = "user27")
+    }
+
+    @Test
+    fun usernamePasswordHostAndPort() {
+        val result = underTest.parse("https://user27:admin123@staging.codinux.net:5432")
+
+        assertUrlParts(result, "https", "staging.codinux.net", port = 5432, username = "user27", password = "admin123")
+    }
+
+    @Test
+    fun usernameAndIPv4() {
+        val result = underTest.parse("http://xerxes@192.168.0.12:4321")
+
+        assertUrlParts(result, "http", "192.168.0.12", port = 4321, username = "xerxes")
+    }
+
+    @Test
+    fun usernamePasswordAndIPv4() {
+        val result = underTest.parse("http://xerxes:salamis@192.168.0.12:4321")
+
+        assertUrlParts(result, "http", "192.168.0.12", port = 4321, username = "xerxes", password = "salamis")
+    }
+
+
+    private fun assertUrlParts(result: URLParts, scheme: String, host: String?, path: String = "", query: String? = null, fragment: String? = null, port: Int? = null, username: String? = null, password: String? = null) {
+        result.scheme.shouldBe(scheme)
+
+        result.host.shouldBe(host)
+        result.port.shouldBe(port)
+
+        result.path.shouldBe(path)
+
+        result.query.shouldBe(query)
+        result.fragment.shouldBe(fragment)
+
+        result.username.shouldBe(username)
+        result.password.shouldBe(password)
+    }
+}
