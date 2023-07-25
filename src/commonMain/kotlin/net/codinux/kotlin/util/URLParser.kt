@@ -63,6 +63,8 @@ class URLParser {
      *
      * - An optional **query** component preceded by a question mark (?), consisting of a query string of non-hierarchical data. Its syntax is not well defined, but by convention is most often a sequence of attribute–value pairs separated by a delimiter.
      * - An optional **fragment** component preceded by a hash (#). The fragment contains a fragment identifier providing direction to a secondary resource, such as a section heading in an article identified by the remainder of the URI. When the primary resource is an HTML document, the fragment is often an id attribute of a specific element, and web browsers will scroll this element into view.
+     *
+     * May see also: https://www.w3.org/Addressing/URL/url-spec.html
      */
     fun parse(url: String): URLParts {
         val scheme = extractScheme(url)
