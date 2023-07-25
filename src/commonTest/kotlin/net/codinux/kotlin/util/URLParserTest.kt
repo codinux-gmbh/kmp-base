@@ -136,42 +136,42 @@ class URLParserTest {
     fun ipv6Loopback() {
         val result = underTest.parse("http://[::1]")
 
-        assertUrlParts(result, "http", "::1")
+        assertUrlParts(result, "http", "::1", hostIsIPv6Address = true)
     }
 
     @Test
     fun ipv6FullLoopback() {
         val result = underTest.parse("http://[0000:0000:0000:0000:0000:0000:0000:0001]")
 
-        assertUrlParts(result, "http", "0000:0000:0000:0000:0000:0000:0000:0001")
+        assertUrlParts(result, "http", "0000:0000:0000:0000:0000:0000:0000:0001", hostIsIPv6Address = true)
     }
 
     @Test
     fun ipv6() {
         val result = underTest.parse("http://[fe80::20c:29ff:fee2:1de]")
 
-        assertUrlParts(result, "http", "fe80::20c:29ff:fee2:1de")
+        assertUrlParts(result, "http", "fe80::20c:29ff:fee2:1de", hostIsIPv6Address = true)
     }
 
     @Test
     fun ipv6_2() {
         val result = underTest.parse("http://[2001:0db8:85a3:0000:0000:8a2e:0370:7334]")
 
-        assertUrlParts(result, "http", "2001:0db8:85a3:0000:0000:8a2e:0370:7334")
+        assertUrlParts(result, "http", "2001:0db8:85a3:0000:0000:8a2e:0370:7334", hostIsIPv6Address = true)
     }
 
     @Test
     fun ipv6_3() {
         val result = underTest.parse("http://[FE80:0000:0000:0000:0202:B3FF:FE1E:8329]")
 
-        assertUrlParts(result, "http", "FE80:0000:0000:0000:0202:B3FF:FE1E:8329")
+        assertUrlParts(result, "http", "FE80:0000:0000:0000:0202:B3FF:FE1E:8329", hostIsIPv6Address = true)
     }
 
     @Test
     fun ipv6AndPort() {
         val result = underTest.parse("http://[fe80::20c:29ff:fee2:1de]:8080")
 
-        assertUrlParts(result, "http", "fe80::20c:29ff:fee2:1de", port = 8080)
+        assertUrlParts(result, "http", "fe80::20c:29ff:fee2:1de", port = 8080, hostIsIPv6Address = true)
     }
 
     @Test
@@ -254,7 +254,8 @@ class URLParserTest {
     }
 
 
-    private fun assertUrlParts(result: URLParts, scheme: String, host: String?, path: String? = null, query: String? = null, fragment: String? = null, port: Int? = null, username: String? = null, password: String? = null) {
+    private fun assertUrlParts(result: URLParts, scheme: String, host: String?, path: String? = null, query: String? = null, fragment: String? = null,
+                               port: Int? = null, username: String? = null, password: String? = null, hostIsIPv6Address: Boolean = false) {
         result.scheme.shouldBe(scheme)
 
         result.host.shouldBe(host)
@@ -267,5 +268,23 @@ class URLParserTest {
 
         result.username.shouldBe(username)
         result.password.shouldBe(password)
+
+        result.hostIsIPv6Address.shouldBe(hostIsIPv6Address)
+
+        if (host != null) {
+            var expectedAuthority = if (hostIsIPv6Address) "[$host]" else host
+            if (port != null) {
+                expectedAuthority += ":$port"
+            }
+            if (username != null) {
+                if (password == null) {
+                    expectedAuthority = "$username@$expectedAuthority"
+                } else {
+                    expectedAuthority = "$username:$password@$expectedAuthority"
+                }
+            }
+
+            result.authority.shouldBe(expectedAuthority)
+        }
     }
 }

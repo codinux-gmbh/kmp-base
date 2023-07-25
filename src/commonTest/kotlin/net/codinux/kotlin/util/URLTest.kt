@@ -107,4 +107,68 @@ class URLTest {
         result.fragment.shouldBe("fragment")
     }
 
+
+    @Test
+    fun domainRelativeUrl() {
+        val domainRelativeUrl = "//codinux.de/start.html"
+
+        val result = URL(URLResolverTest.BaseUrlWithPathQueryAndFragment, domainRelativeUrl)
+
+        result.toString().shouldBe("https:" + domainRelativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithSlashAndRelativeUrlStartsWithSlash() {
+        val relativeUrl = "/path4"
+
+        val result = URL(URLResolverTest.BaseUrlWithPath + "/", relativeUrl)
+
+        result.toString().shouldBe(URLResolverTest.BaseUrl + relativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithSlashAndRelativeUrlStartsWithLetter() {
+        val relativeUrl = "path4"
+
+        val result = URL(URLResolverTest.BaseUrlWithPath + "/", relativeUrl)
+
+        result.toString().shouldBe(URLResolverTest.BaseUrlWithPath + "/" + relativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithLetterAndRelativeUrlStartsWithSlash() {
+        val relativeUrl = "/path4"
+
+        val result = URL(URLResolverTest.BaseUrlWithPath, relativeUrl)
+
+        result.toString().shouldBe(URLResolverTest.BaseUrl + relativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithSlashQueryAndFragmentAndRelativeUrlStartsWithSlash() {
+        val relativeUrl = "/path4"
+
+        val result = URL("${URLResolverTest.BaseUrlWithPath}/${URLResolverTest.Query}${URLResolverTest.Fragment}", relativeUrl)
+
+        result.toString().shouldBe(URLResolverTest.BaseUrl + relativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithSlashQueryAndFragmentAndRelativeUrlStartsWithLetter() {
+        val relativeUrl = "path4"
+
+        val result = URL("${URLResolverTest.BaseUrlWithPath}/${URLResolverTest.Query}${URLResolverTest.Fragment}", relativeUrl)
+
+        result.toString().shouldBe(URLResolverTest.BaseUrlWithPath + "/" + relativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithLetterQueryAndFragmentAndRelativeUrlStartsWithSlash() {
+        val relativeUrl = "/path4"
+
+        val result = URL(URLResolverTest.BaseUrlWithPathQueryAndFragment, relativeUrl)
+
+        result.toString().shouldBe(URLResolverTest.BaseUrl + relativeUrl)
+    }
+
 }

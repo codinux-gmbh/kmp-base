@@ -17,27 +17,11 @@ class URLResolver {
         }
 
         val baseParts = URLParser.Instance.parse(baseUrl)
-        val baseUrlWithoutQueryAndFragment = baseUrl
-            .replace(baseParts.query?.let { "?$it" } ?: "", "")
-            .replace(baseParts.fragment?.let { "#$it" } ?: "", "")
 
-        // TODO: implement removing file for most cases
-
-        val baseUrlWithoutSlash = if (baseUrlWithoutQueryAndFragment.endsWith('/')) { // remove trailing slash
-            baseUrlWithoutQueryAndFragment.substring(0, baseUrlWithoutQueryAndFragment.lastIndex)
-        } else {
-            baseUrlWithoutQueryAndFragment
-        }
-        val baseUrlWithSlash = if (baseUrlWithoutQueryAndFragment.endsWith('/')) { // remove trailing slash
-            baseUrlWithoutQueryAndFragment
-        } else {
-            baseUrlWithoutQueryAndFragment + "/"
-        }
-
-        return resolveUrlAfterChecks(relativeUrl, baseUrlWithoutSlash, baseUrlWithSlash, baseParts.scheme)
+        return resolveUrlAfterChecks(baseParts, relativeUrl)
     }
 
-    private fun resolveUrlAfterChecks(relativeUrl: String, baseUrlWithoutSlash: String, baseUrlWithSlash: String, baseUrlScheme: String): String {
+    private fun resolveUrlAfterChecks(baseUrlParts: URLParts, relativeUrl: String): String {
         // amongst others relative URLs can start with (see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#URI_references):
         // - // (domain relative url)
         // - /
@@ -48,30 +32,37 @@ class URLResolver {
         // - # (fragment)
         // - ; (?)
 
+        val baseUrl = "${baseUrlParts.scheme}:" + (
+                baseUrlParts.authority?.let { "//${baseUrlParts.authority}" } ?: "")
+        // TODO: implement removing file for most cases
+        val baseUrlWithPath = "$baseUrl${baseUrlParts.path?.let { "/$it" } ?: ""}".let {
+            if (it.endsWith('/')) it.substring(0, it.lastIndex) else it
+        }
+
         if (relativeUrl.isEmpty() || relativeUrl == "." || relativeUrl == "/") {
-            return baseUrlWithSlash
+            return baseUrlWithPath + "/"
         }
 
         val firstChar = relativeUrl[0] // empty relativeUrl is already handled above
         if (firstChar.isLetterOrDigit()) {
-            return baseUrlWithSlash + relativeUrl
+            return baseUrlWithPath + "/" + relativeUrl
         }
 
         val secondChar = if (relativeUrl.length >= 2) relativeUrl[1] else null
 
         return when (firstChar) {
-            '?', '#', ';' -> baseUrlWithoutSlash + relativeUrl // query or fragment
+            '?', '#', ';' -> baseUrlWithPath + relativeUrl // query or fragment
             '/' -> if (secondChar == '/') { // domain relative url
-                baseUrlScheme + ":" + relativeUrl
+                baseUrlParts.scheme + ":" + relativeUrl
             } else if (secondChar?.isLetterOrDigit() == true) { // after check above second char must be a letter or digit then -> path or file
-                baseUrlWithoutSlash + relativeUrl
+                baseUrl + relativeUrl
             } else { // should never come to this
                 throwNotARelativeUrlException(relativeUrl)
             }
             '.' -> if (secondChar == '/') {
-                baseUrlWithoutSlash + relativeUrl.substring(1)
+                baseUrlWithPath + relativeUrl.substring(1)
             } else if (secondChar == '.') {
-                resolveUrlByMovingUpPath(baseUrlWithSlash, relativeUrl)
+                resolveUrlByMovingUpPath(baseUrlWithPath, relativeUrl)
             } else { // should never come to this
                 throwNotARelativeUrlException(relativeUrl)
             }
@@ -79,7 +70,7 @@ class URLResolver {
         }
     }
 
-    private fun resolveUrlByMovingUpPath(baseUrlWithSlash: String, relativeUrl: String): String {
+    private fun resolveUrlByMovingUpPath(baseUrlWithPath: String, relativeUrl: String): String {
         throw Exception("Resolving relative URLs that start with '../' is not implemented yet")
     }
 

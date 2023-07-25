@@ -6,10 +6,11 @@ import kotlin.test.Test
 class URLResolverTest {
 
     companion object {
-        private const val BaseUrlWithoutQueryAndFragment = "https://www.codinux.net/path1/path2/path3"
-        private const val Query = "?name1=value1&name2=value2"
-        private const val Fragment = "#fragment"
-        private const val BaseUrl = "$BaseUrlWithoutQueryAndFragment$Query$Fragment"
+        const val BaseUrl = "https://www.codinux.net"
+        const val BaseUrlWithPath = "$BaseUrl/path1/path2/path3"
+        const val Query = "?name1=value1&name2=value2"
+        const val Fragment = "#fragment"
+        const val BaseUrlWithPathQueryAndFragment = "$BaseUrlWithPath$Query$Fragment"
     }
 
 
@@ -19,7 +20,7 @@ class URLResolverTest {
     fun domainRelativeUrl() {
         val domainRelativeUrl = "//codinux.de/start.html"
 
-        val result = underTest.resolveUrl(BaseUrl, domainRelativeUrl)
+        val result = underTest.resolveUrl(BaseUrlWithPathQueryAndFragment, domainRelativeUrl)
 
         result.shouldBe("https:" + domainRelativeUrl)
     }
@@ -28,54 +29,54 @@ class URLResolverTest {
     fun baseUrlEndsWithSlashAndRelativeUrlStartsWithSlash() {
         val relativeUrl = "/path4"
 
-        val result = underTest.resolveUrl(BaseUrlWithoutQueryAndFragment + "/", relativeUrl)
+        val result = underTest.resolveUrl(BaseUrlWithPath + "/", relativeUrl)
 
-        result.shouldBe(BaseUrlWithoutQueryAndFragment + relativeUrl)
+        result.shouldBe(BaseUrl + relativeUrl)
     }
 
     @Test
     fun baseUrlEndsWithSlashAndRelativeUrlStartsWithLetter() {
         val relativeUrl = "path4"
 
-        val result = underTest.resolveUrl(BaseUrlWithoutQueryAndFragment + "/", relativeUrl)
+        val result = underTest.resolveUrl(BaseUrlWithPath + "/", relativeUrl)
 
-        result.shouldBe(BaseUrlWithoutQueryAndFragment + "/" + relativeUrl)
+        result.shouldBe(BaseUrlWithPath + "/" + relativeUrl)
     }
 
     @Test
     fun baseUrlEndsWithLetterAndRelativeUrlStartsWithSlash() {
         val relativeUrl = "/path4"
 
-        val result = underTest.resolveUrl(BaseUrlWithoutQueryAndFragment, relativeUrl)
+        val result = underTest.resolveUrl(BaseUrlWithPath, relativeUrl)
 
-        result.shouldBe(BaseUrlWithoutQueryAndFragment + relativeUrl)
+        result.shouldBe(BaseUrl + relativeUrl)
     }
 
     @Test
     fun baseUrlEndsWithSlashQueryAndFragmentAndRelativeUrlStartsWithSlash() {
         val relativeUrl = "/path4"
 
-        val result = underTest.resolveUrl("$BaseUrlWithoutQueryAndFragment/$Query$Fragment", relativeUrl)
+        val result = underTest.resolveUrl("$BaseUrlWithPath/$Query$Fragment", relativeUrl)
 
-        result.shouldBe(BaseUrlWithoutQueryAndFragment + relativeUrl)
+        result.shouldBe(BaseUrl + relativeUrl)
     }
 
     @Test
     fun baseUrlEndsWithSlashQueryAndFragmentAndRelativeUrlStartsWithLetter() {
         val relativeUrl = "path4"
 
-        val result = underTest.resolveUrl("$BaseUrlWithoutQueryAndFragment/$Query$Fragment", relativeUrl)
+        val result = underTest.resolveUrl("$BaseUrlWithPath/$Query$Fragment", relativeUrl)
 
-        result.shouldBe(BaseUrlWithoutQueryAndFragment + "/" + relativeUrl)
+        result.shouldBe(BaseUrlWithPath + "/" + relativeUrl)
     }
 
     @Test
     fun baseUrlEndsWithLetterQueryAndFragmentAndRelativeUrlStartsWithSlash() {
         val relativeUrl = "/path4"
 
-        val result = underTest.resolveUrl(BaseUrl, relativeUrl)
+        val result = underTest.resolveUrl(BaseUrlWithPathQueryAndFragment, relativeUrl)
 
-        result.shouldBe(BaseUrlWithoutQueryAndFragment + relativeUrl)
+        result.shouldBe(BaseUrl + relativeUrl)
     }
 
 }

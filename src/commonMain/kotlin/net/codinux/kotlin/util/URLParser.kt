@@ -71,7 +71,7 @@ class URLParser {
         val indexOfFirstSlash = scheme.length + 1
 
         return if (url.length == indexOfFirstSlash + 1) { // no host and empty path
-            URLParts(scheme, null, null)
+            URLParts(scheme, null, null, null)
         } else if (url[indexOfFirstSlash + 1] == '/') {
             if (url.length == indexOfFirstSlash + 2) {
                 throwMalformedUrlException("After '://' a host has to be specified")
@@ -151,10 +151,11 @@ class URLParser {
 
         val path = if (pathStartIndex == authorityAndPath.length) "" else authorityAndPath.substring(pathStartIndex + 1) // + 1 to remove leading slash
 
-        return parsePath(scheme, path, host, port, username, password)
+        return parsePath(scheme, path, authority, host, port, username, password, ipv6Address != null)
     }
 
-    private fun parsePath(scheme: String, pathQueryAndFragment: String, host: String? = null, port: Int? = null, username: String? = null, password: String? = null): URLParts {
+    private fun parsePath(scheme: String, pathQueryAndFragment: String, authority: String? = null, host: String? = null,
+                          port: Int? = null, username: String? = null, password: String? = null, hostIsIPv6Address: Boolean = false): URLParts {
         val indexOfQuestionMark = pathQueryAndFragment.indexOfOrNull('?')
         val indexOfHash = pathQueryAndFragment.indexOfOrNull('#')
 
@@ -171,7 +172,7 @@ class URLParser {
             pathQueryAndFragment.substring(indexOfHash + 1, endIndex)
         }
 
-        return URLParts(scheme, host, port, path, query, fragment, username, password)
+        return URLParts(scheme, authority, host, port, path, query, fragment, username, password, hostIsIPv6Address)
     }
 
     private fun checkIfContainsValidIpv6Address(authority: String): String? {
