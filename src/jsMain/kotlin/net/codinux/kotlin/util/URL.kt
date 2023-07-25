@@ -30,6 +30,18 @@ actual class URL(private val impl: URL) {
     } catch (e: Throwable) {
         throw URLParser.createMalformedUrlException("'$url' is not an absolute URL")
     }) {
+        assertValidUrl(url)
+    }
+
+    actual constructor(baseUrl: String, relativeUrl: String) : this(try {
+        URL(relativeUrl, adjustUrlToMakeJavaScriptUrlParsingWork(baseUrl))
+    } catch (e: Throwable) {
+        throw URLParser.createMalformedUrlException("'$baseUrl' is not an absolute URL")
+    }) {
+        assertValidUrl(baseUrl)
+    }
+
+    private fun assertValidUrl(url: String) {
         // if only ':/' is specified, JavaScript does not recognize that only path but no domain is set
         if (needsAdjustmentForEmptyHost(url)) {
             hostWasEmptyInUrlString = true
@@ -44,6 +56,7 @@ actual class URL(private val impl: URL) {
         }
     }
 
+
     actual val scheme = impl.protocol.replace(":", "")
 
     actual val host: String?
@@ -56,5 +69,8 @@ actual class URL(private val impl: URL) {
     actual val port: Int?
         get() = impl.port.toIntOrNull()
             ?: protocolDefaultPortContainedInUrlString
+
+
+    override fun toString() = impl.toString()
 
 }

@@ -225,6 +225,35 @@ class URLParserTest {
     }
 
 
+    @Test
+    fun query() {
+        val result = underTest.parse("https://www.codinux.net/path/?name1=value1&name2=value2")
+
+        assertUrlParts(result, "https", "www.codinux.net", "path/", "name1=value1&name2=value2")
+    }
+
+    @Test
+    fun fragment() {
+        val result = underTest.parse("https://www.codinux.net/path/#fragment")
+
+        assertUrlParts(result, "https", "www.codinux.net", "path/", fragment = "fragment")
+    }
+
+    @Test
+    fun queryBeforeFragment() {
+        val result = underTest.parse("https://www.codinux.net/path/?name1=value1&name2=value2#fragment")
+
+        assertUrlParts(result, "https", "www.codinux.net", "path/", "name1=value1&name2=value2", "fragment")
+    }
+
+    @Test
+    fun fragmentBeforeQuery() { // actually an illegal URL, but check if URLParser can handle it
+        val result = underTest.parse("https://www.codinux.net/path/#fragment?name1=value1&name2=value2")
+
+        assertUrlParts(result, "https", "www.codinux.net", "path/", "name1=value1&name2=value2", "fragment")
+    }
+
+
     private fun assertUrlParts(result: URLParts, scheme: String, host: String?, path: String = "", query: String? = null, fragment: String? = null, port: Int? = null, username: String? = null, password: String? = null) {
         result.scheme.shouldBe(scheme)
 

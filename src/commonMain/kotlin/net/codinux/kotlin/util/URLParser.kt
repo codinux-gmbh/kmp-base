@@ -2,6 +2,7 @@ package net.codinux.kotlin.util
 
 import net.codinux.kotlin.collections.ImmutableList
 import net.codinux.kotlin.collections.ImmutableMap
+import kotlin.math.min
 
 /**
  * A very rudimentary version of a URL parser, not meant to be used in production.
@@ -64,21 +65,10 @@ class URLParser {
      * - An optional **fragment** component preceded by a hash (#). The fragment contains a fragment identifier providing direction to a secondary resource, such as a section heading in an article identified by the remainder of the URI. When the primary resource is an HTML document, the fragment is often an id attribute of a specific element, and web browsers will scroll this element into view.
      */
     fun parse(url: String): URLParts {
-        val indexOfFirstColon = url.indexOfOrNull(':')
-        if (indexOfFirstColon == null) {
-            throwMalformedUrlException("URL must start with the protocol followed by a colon like 'https:'")
-        }
+        val scheme = extractScheme(url)
 
-        val scheme = url.substring(0, indexOfFirstColon!!)
-        if (KnownSchemes.none { it.equals(scheme, true) }) {
-            throwMalformedUrlException("'$scheme' is not a known scheme. Known schemes are: $KnownSchemes")
-        }
-
-        if (url.length == indexOfFirstColon + 1 || url[indexOfFirstColon + 1] != '/') {
-            throwMalformedUrlException("The scheme ('$scheme:') has to be followed by a '/'")
-        }
-
-        val indexOfFirstSlash = indexOfFirstColon + 1
+        // TODO: mailto:, news:, tel: and urn: URIs do not have a slash after colon
+        val indexOfFirstSlash = scheme.length + 1
 
         return if (url.length == indexOfFirstSlash + 1) { // no host and empty path
             URLParts(scheme, null, null, "")
@@ -90,6 +80,25 @@ class URLParser {
         } else {
             parsePath(scheme, url.substring(indexOfFirstSlash + 1))
         }
+    }
+
+    internal fun extractScheme(url: String): String {
+        val indexOfFirstColon = url.indexOfOrNull(':')
+        if (indexOfFirstColon == null) {
+            throwMalformedUrlException("URL must start with the protocol followed by a colon like 'https:'")
+        }
+
+        val scheme = url.substring(0, indexOfFirstColon!!)
+        if (KnownSchemes.none { it.equals(scheme, true) }) {
+            throwMalformedUrlException("'$scheme' is not a known scheme. Known schemes are: $KnownSchemes")
+        }
+
+        // TODO: mailto:, news:, tel: and urn: URIs do not have a slash after colon
+        if (url.length == indexOfFirstColon + 1 || url[indexOfFirstColon + 1] != '/') {
+            throwMalformedUrlException("The scheme ('$scheme:') has to be followed by a '/'")
+        }
+
+        return scheme
     }
 
     private fun parseAuthorityAndPath(scheme: String, authorityAndPath: String): URLParts {
@@ -114,7 +123,7 @@ class URLParser {
 
         val password = indexOfPasswordSeparator?.let { authorityAndPath.substring(indexOfPasswordSeparator + 1, indexOfAt) }
 
-        val hostAndPort = authorityAndPath.substring(indexOfAt?.let { it + 1 } ?: 0)
+        val hostAndPort = authority.substring(indexOfAt?.let { it + 1 } ?: 0)
         if (ipv6Address != null && hostAndPort.startsWith("[$ipv6Address]") == false) {
             throwMalformedUrlException("The IPv6 address '$ipv6Address' must be right at the beginning of the host part: $hostAndPort")
         }
@@ -140,15 +149,28 @@ class URLParser {
             hostAndPort
         }
 
-        val path = if (pathStartIndex == authorityAndPath.length) "" else authorityAndPath.substring(pathStartIndex)
+        val path = if (pathStartIndex == authorityAndPath.length) "" else authorityAndPath.substring(pathStartIndex + 1) // + 1 to remove leading slash
 
         return parsePath(scheme, path, host, port, username, password)
     }
 
-    private fun parsePath(scheme: String, path: String, host: String? = null, port: Int? = null, username: String? = null, password: String? = null): URLParts {
-        //TODO: parse query and fragment
+    private fun parsePath(scheme: String, pathQueryAndFragment: String, host: String? = null, port: Int? = null, username: String? = null, password: String? = null): URLParts {
+        val indexOfQuestionMark = pathQueryAndFragment.indexOfOrNull('?')
+        val indexOfHash = pathQueryAndFragment.indexOfOrNull('#')
 
-        return URLParts(scheme, host, port, path, null, null, username, password)
+        val path = pathQueryAndFragment.substring(0, min(indexOfQuestionMark ?: pathQueryAndFragment.length, indexOfHash ?: pathQueryAndFragment.length))
+
+        val query = indexOfQuestionMark?.let {
+            val endIndex = if (indexOfHash != null && indexOfHash > indexOfQuestionMark) indexOfHash else pathQueryAndFragment.length
+            pathQueryAndFragment.substring(it + 1, endIndex)
+        }
+
+        val fragment = indexOfHash?.let {
+            val endIndex = if (indexOfQuestionMark != null && indexOfQuestionMark > indexOfHash) indexOfQuestionMark else pathQueryAndFragment.length
+            pathQueryAndFragment.substring(indexOfHash + 1, endIndex)
+        }
+
+        return URLParts(scheme, host, port, path, query, fragment, username, password)
     }
 
     private fun checkIfContainsValidIpv6Address(authority: String): String? {
@@ -166,10 +188,10 @@ class URLParser {
             throwMalformedUrlException("Authority contains ']' but no '[': $authority")
         }
 
-        if (authority.countChars('[') > 1) {
+        if (authority.countOccurrences('[') > 1) {
             throwMalformedUrlException("Authority may only contain one '[': $authority")
         }
-        if (authority.countChars(']') > 1) {
+        if (authority.countOccurrences(']') > 1) {
             throwMalformedUrlException("Authority may only contain one ']': $authority")
         }
 
