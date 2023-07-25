@@ -2,8 +2,12 @@ plugins {
     kotlin("multiplatform") version "1.8.22"
 }
 
-group = "net.codinux"
-version = "1.0.0-SNAPSHOT"
+group = "net.codinux.kotlin"
+version = "0.1.0-SNAPSHOT"
+
+ext["projectDescription"] = "Common functions and classes for all KMP platforms that are missing in Kotlin Stdlib like concurrent structures, URL, Locale, ..."
+ext["sourceCodeRepositoryBaseUrl"] = "github.com/codinux-gmbh/kmp-base"
+
 
 repositories {
     mavenCentral()
@@ -123,4 +127,10 @@ tasks.named<Test>("jvmTest") {
         )
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
+}
+
+
+val publishingScript = File(File(project.gradle.gradleUserHomeDir, "scripts"), "publish-codinux.gradle.kts")
+if (publishingScript.exists()) {
+    apply(from = publishingScript)
 }
