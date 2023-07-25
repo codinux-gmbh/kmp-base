@@ -4,7 +4,7 @@ data class URLParts(
     val scheme: String,
     val host: String?,
     val port: Int?,
-    val path: String,
+    val path: String? = null,
     val query: String? = null,
     val fragment: String? = null,
     val username: String? = null,

@@ -23,6 +23,15 @@ actual class URL(private val impl: URL) {
 
     actual val port = impl.port.takeIf { it > 0 }
 
+    actual val path: String? = impl.path?.takeIf { it.isNotBlank() }?.let {
+        it.substring(1) // remove leading '/'
+            .takeIf { it.isNotBlank() }
+    }
+
+    actual val query: String? = impl.query
+
+    actual val fragment: String? = impl.ref
+
 
     override fun toString(): String = impl.toExternalForm()
 

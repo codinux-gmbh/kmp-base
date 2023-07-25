@@ -35,3 +35,9 @@ fun String.countOccurrences(string: String, startIndex: Int = 0, ignoreCase: Boo
 
     return count
 }
+
+fun String?.isNotNullOrEmpty() =
+    this.isNullOrEmpty() == false
+
+fun String?.isNotNullOrBlank() =
+    this.isNullOrBlank() == false

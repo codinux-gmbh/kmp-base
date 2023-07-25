@@ -13,6 +13,12 @@ actual class URL actual constructor(private val url: String) {
 
     actual val port = urlParts.port
 
+    actual val path: String? = urlParts.path
+
+    actual val query = urlParts.query
+
+    actual val fragment = urlParts.fragment
+
 
     override fun toString() = this.url
 

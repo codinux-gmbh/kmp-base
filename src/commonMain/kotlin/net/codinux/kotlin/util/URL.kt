@@ -10,4 +10,10 @@ expect class URL(url: String) {
 
     val port: Int?
 
+    val path: String?
+
+    val query: String?
+
+    val fragment: String?
+
 }

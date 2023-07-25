@@ -70,6 +70,19 @@ actual class URL(private val impl: URL) {
         get() = impl.port.toIntOrNull()
             ?: protocolDefaultPortContainedInUrlString
 
+    actual val path: String? = impl.pathname.takeIf { it.isNotBlank() }?.let {
+        it.substring(1) // remove leading '/'
+            .takeIf { it.isNotBlank() }
+    }
+
+    actual val query: String? = impl.search.takeIf { it.isNotBlank() }?.let {
+        it.substring(1) // remove leading '?'
+    }
+
+    actual val fragment: String? = impl.hash.takeIf { it.isNotBlank() }?.let {
+        it.substring(1) // remove leading '#'
+    }
+
 
     override fun toString() = impl.toString()
 

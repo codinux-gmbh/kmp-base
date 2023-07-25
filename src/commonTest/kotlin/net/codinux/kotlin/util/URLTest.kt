@@ -56,4 +56,55 @@ class URLTest {
         result.port.shouldBeNull()
     }
 
+    @Test
+    fun pathIsSet() {
+        val result = URL("https://www.codinux.net/path1/path2/")
+
+        result.path.shouldBe("path1/path2/")
+    }
+
+    @Test
+    fun pathIsNotSet() {
+        val result = URL("https://www.codinux.net/")
+
+        result.path.shouldBeNull()
+    }
+
+    @Test
+    fun queryIsSet() {
+        val result = URL("https://www.codinux.net/path1/path2/?name1=value2&name2=value2")
+
+        result.query.shouldBe("name1=value2&name2=value2")
+    }
+
+    @Test
+    fun queryIsNotSet() {
+        val result = URL("https://www.codinux.net/path1/path2/")
+
+        result.query.shouldBeNull()
+    }
+
+    @Test
+    fun fragmentIsSet() {
+        val result = URL("https://www.codinux.net/path1/path2/#fragment")
+
+        result.fragment.shouldBe("fragment")
+    }
+
+    @Test
+    fun fragmentIsNotSet() {
+        val result = URL("https://www.codinux.net/path1/path2/")
+
+        result.fragment.shouldBeNull()
+    }
+
+    @Test
+    fun queryAndFragment() {
+        val result = URL("https://www.codinux.net/path1/path2/?name1=value2&name2=value2#fragment")
+
+        result.path.shouldBe("path1/path2/")
+        result.query.shouldBe("name1=value2&name2=value2")
+        result.fragment.shouldBe("fragment")
+    }
+
 }

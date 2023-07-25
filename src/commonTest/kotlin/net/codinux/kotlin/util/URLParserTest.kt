@@ -254,7 +254,7 @@ class URLParserTest {
     }
 
 
-    private fun assertUrlParts(result: URLParts, scheme: String, host: String?, path: String = "", query: String? = null, fragment: String? = null, port: Int? = null, username: String? = null, password: String? = null) {
+    private fun assertUrlParts(result: URLParts, scheme: String, host: String?, path: String? = null, query: String? = null, fragment: String? = null, port: Int? = null, username: String? = null, password: String? = null) {
         result.scheme.shouldBe(scheme)
 
         result.host.shouldBe(host)

@@ -71,7 +71,7 @@ class URLParser {
         val indexOfFirstSlash = scheme.length + 1
 
         return if (url.length == indexOfFirstSlash + 1) { // no host and empty path
-            URLParts(scheme, null, null, "")
+            URLParts(scheme, null, null)
         } else if (url[indexOfFirstSlash + 1] == '/') {
             if (url.length == indexOfFirstSlash + 2) {
                 throwMalformedUrlException("After '://' a host has to be specified")
@@ -159,6 +159,7 @@ class URLParser {
         val indexOfHash = pathQueryAndFragment.indexOfOrNull('#')
 
         val path = pathQueryAndFragment.substring(0, min(indexOfQuestionMark ?: pathQueryAndFragment.length, indexOfHash ?: pathQueryAndFragment.length))
+            .takeIf { it.isNotBlank() }
 
         val query = indexOfQuestionMark?.let {
             val endIndex = if (indexOfHash != null && indexOfHash > indexOfQuestionMark) indexOfHash else pathQueryAndFragment.length
