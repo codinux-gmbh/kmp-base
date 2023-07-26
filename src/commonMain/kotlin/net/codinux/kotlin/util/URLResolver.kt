@@ -18,10 +18,10 @@ class URLResolver {
 
         val baseParts = URLParser.Instance.parse(baseUrl)
 
-        return resolveUrlAfterChecks(baseParts, relativeUrl)
+        return resolveUrl(baseParts, relativeUrl)
     }
 
-    private fun resolveUrlAfterChecks(baseUrlParts: URLParts, relativeUrl: String): String {
+    private fun resolveUrl(baseUrlParts: URLParts, relativeUrl: String): String {
         // amongst others relative URLs can start with (see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#URI_references):
         // - // (domain relative url)
         // - /

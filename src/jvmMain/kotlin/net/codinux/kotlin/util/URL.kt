@@ -4,6 +4,19 @@ import java.net.URL
 
 actual class URL(private val impl: URL) {
 
+    companion object {
+
+        private fun adjustRelativeUrlForJavaBugs(relativeUrl: String): String {
+            // fix for: //example.com + ./foo = //example.com/./foo, not //example.com/foo
+            if (relativeUrl.startsWith("./")) {
+                return relativeUrl.substring(2)
+            }
+
+            return relativeUrl
+        }
+    }
+
+
     actual constructor(url: String) : this(try {
         URL(url)
     } catch (e: Throwable) {
@@ -11,7 +24,7 @@ actual class URL(private val impl: URL) {
     })
 
     actual constructor(baseUrl: String, relativeUrl: String) : this(try {
-        URL(URL(baseUrl), relativeUrl)
+        URL(URL(baseUrl), adjustRelativeUrlForJavaBugs(relativeUrl))
     } catch (e: Throwable) {
         throw URLParser.createMalformedUrlException("'$baseUrl' is not an absolute URL")
     })

@@ -79,4 +79,44 @@ class URLResolverTest {
         result.shouldBe(BaseUrl + relativeUrl)
     }
 
+
+    @Test
+    fun relativeUrlIsDot_BaseUrlEndsWithSlash() {
+        val baseUrl = "http://example.com/path1/path2/"
+
+        val result = URL(baseUrl, ".")
+
+        result.toString().shouldBe(baseUrl)
+    }
+
+    @Test
+    fun relativeUrlIsDot_BaseUrlDoesNotEndWithSlash() {
+        val baseUrl = "http://example.com/path1/path2"
+
+        val result = URL(baseUrl, ".")
+
+        // the last path segment (file) gets removed
+        result.toString().shouldBe("http://example.com/path1/")
+    }
+
+    @Test
+    fun relativeUrlStartsWithDotAndSlash() {
+        val relativeUrl = "./path4"
+
+        val result = underTest.resolveUrl(BaseUrlWithPathQueryAndFragment, relativeUrl)
+
+        // the last path segment (file) gets removed
+        result.shouldBe(BaseUrlWithPath.replace("/path3", "") + relativeUrl.substring(1))
+    }
+
+    @Test
+    fun relativeUrlStartsWithDotSlashAndFile() {
+        val baseUrl = "http://example.com"
+        val relativeUrl = "./one/two.html"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl + relativeUrl.substring(1))
+    }
+
 }

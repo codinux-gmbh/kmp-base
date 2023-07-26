@@ -161,7 +161,7 @@ class URLParser {
         val indexOfQuestionMark = pathQueryAndFragment.indexOfOrNull('?')
         val indexOfHash = pathQueryAndFragment.indexOfOrNull('#')
 
-        val path = pathQueryAndFragment.substring(0, min(indexOfQuestionMark ?: pathQueryAndFragment.length, indexOfHash ?: pathQueryAndFragment.length))
+        val pathAndFile = pathQueryAndFragment.substring(0, min(indexOfQuestionMark ?: pathQueryAndFragment.length, indexOfHash ?: pathQueryAndFragment.length))
             .takeIf { it.isNotBlank() }
 
         val query = indexOfQuestionMark?.let {
@@ -174,7 +174,18 @@ class URLParser {
             pathQueryAndFragment.substring(indexOfHash + 1, endIndex)
         }
 
-        return URLParts(scheme, authority, host, port, path, query, fragment, username, password, hostIsIPv6Address)
+        val (path, file) = if (pathAndFile?.endsWith('/') == true) {
+            pathAndFile to null
+        } else {
+            val lastIndexOfSlash = pathAndFile?.lastIndexOfOrNull('/')
+            if (lastIndexOfSlash == null) {
+                pathAndFile to null
+            } else {
+                pathAndFile.substring(0, lastIndexOfSlash + 1) to pathAndFile.substring(lastIndexOfSlash + 1)
+            }
+        }
+
+        return URLParts(scheme, authority, host, port, path, file, query, fragment, username, password, hostIsIPv6Address)
     }
 
     private fun checkIfContainsValidIpv6Address(authority: String): String? {

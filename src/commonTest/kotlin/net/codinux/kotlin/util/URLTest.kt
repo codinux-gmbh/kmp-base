@@ -107,6 +107,24 @@ class URLTest {
         result.fragment.shouldBe("fragment")
     }
 
+    @Test
+    fun urlEndsWithSlash() {
+        val url = "http://example.com/path1/path2/"
+
+        val result = URL(url)
+
+        result.toString().shouldBe(url)
+    }
+
+    @Test
+    fun urlDoesNotEndWithSlash() {
+        val url = "http://example.com/path1/path2"
+
+        val result = URL(url)
+
+        result.toString().shouldBe(url)
+    }
+
 
     @Test
     fun domainRelativeUrl() {
@@ -169,6 +187,65 @@ class URLTest {
         val result = URL(URLResolverTest.BaseUrlWithPathQueryAndFragment, relativeUrl)
 
         result.toString().shouldBe(URLResolverTest.BaseUrl + relativeUrl)
+    }
+
+    @Test
+    fun relativeUrlIsDot_BaseUrlEndsWithSlash() {
+        val baseUrl = "http://example.com/path1/path2/"
+
+        val result = URL(baseUrl, ".")
+
+        result.toString().shouldBe(baseUrl)
+    }
+
+    @Test
+    fun relativeUrlIsDot_BaseUrlDoesNotEndWithSlash() {
+        val baseUrl = "http://example.com/path1/path2"
+
+        val result = URL(baseUrl, ".")
+
+        result.toString().shouldBe("http://example.com/path1/")
+    }
+
+    @Test
+    fun relativeUrlStartsWithDotAndSlash() {
+        val relativeUrl = "./path4"
+
+        val result = URL(URLResolverTest.BaseUrlWithPathQueryAndFragment, relativeUrl)
+
+        // the last path segment (file) gets removed
+        result.toString().shouldBe(URLResolverTest.BaseUrlWithPath.replace("/path3", "") + relativeUrl.substring(1))
+    }
+
+    @Test
+    fun relativeUrlStartsWithDotSlashAndFile() {
+        val baseUrl = "http://example.com"
+        val relativeUrl = "./one/two.html"
+
+        val result = URL(baseUrl, relativeUrl)
+
+        result.toString().shouldBe(baseUrl + relativeUrl.substring(1))
+    }
+
+    @Test
+    fun baseUrlPathEndsWithSlash() {
+        val baseUrl = "http://example.com/path1/path2/"
+        val relativeUrl = "./one/two.html"
+
+        val result = URL(baseUrl, relativeUrl)
+
+        result.toString().shouldBe(baseUrl + relativeUrl.substring(2))
+    }
+
+    @Test
+    fun baseUrlPathDoesNotEndWithSlash() {
+        val baseUrl = "http://example.com/path1/path2"
+        val relativeUrl = "./one/two.html"
+
+        val result = URL(baseUrl, relativeUrl)
+
+        // the last path segment (file) gets removed
+        result.toString().shouldBe("http://example.com/path1" + relativeUrl.substring(1))
     }
 
 }
