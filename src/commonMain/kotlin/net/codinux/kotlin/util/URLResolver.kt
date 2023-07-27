@@ -56,10 +56,10 @@ class URLResolver {
 
         val baseParts = URLParser.Instance.parse(baseUrl)
 
-        return resolveUrl(baseParts, relativeUrl)
+        return resolveUrl(baseUrl, baseParts, relativeUrl)
     }
 
-    private fun resolveUrl(baseUrlParts: URLParts, relativeUrl: String): String {
+    private fun resolveUrl(originalBaseUrl: String, baseUrlParts: URLParts, relativeUrl: String): String {
         // amongst others relative URLs can start with (see https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#URI_references):
         // - // (domain relative url)
         // - /
@@ -89,7 +89,7 @@ class URLResolver {
         val secondChar = if (relativeUrl.length >= 2) relativeUrl[1] else null
 
         return when (firstChar) {
-            '?', '#', ';' -> baseUrlWithPath + relativeUrl // query or fragment
+            '?', '#', ';' -> originalBaseUrl + relativeUrl // query or fragment
             '/' -> if (secondChar == '/') { // domain relative url
                 baseUrlParts.scheme + ":" + relativeUrl
             } else if (secondChar?.isLetterOrDigit() == true) { // after check above second char must be a letter or digit then -> path or file

@@ -160,4 +160,45 @@ class URLResolverTest {
         result.shouldBe("https://codinux.net" + relativeUrl.substring(8))
     }
 
+
+    @Test
+    fun relativeUrlIsQuery_BaseUrlEndsWithPathSegment() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "?name1=value1&name2=value2"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl + relativeUrl)
+    }
+
+    @Test
+    fun relativeUrlIsQuery_BaseUrlEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val relativeUrl = "?name1=value1&name2=value2"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl + relativeUrl)
+    }
+
+    @Test
+    fun relativeUrlIsFragment_BaseUrlEndsWithPathSegment() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "#fragment"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl + relativeUrl)
+    }
+
+    @Test
+    fun relativeUrlIsFragment_BaseUrlEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val relativeUrl = "#fragment"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl + relativeUrl)
+    }
+
 }

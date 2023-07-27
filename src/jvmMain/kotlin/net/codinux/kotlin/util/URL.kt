@@ -29,10 +29,13 @@ actual class URL(private val impl: URL) {
     })
 
     actual constructor(baseUrl: String, relativeUrl: String) : this(try {
-        URL(URL(baseUrl), relativeUrl).let { url ->
+        val base = URL(baseUrl)
+        URL(base, relativeUrl).let { url ->
             if (url.path.startsWith("./") || url.path.startsWith("/./") || url.path.startsWith("../") || url.path.startsWith("/../")) {
                 val buggyPath = if (url.path.startsWith('/')) url.path.substring(1) else url.path
-                URL(URL(baseUrl), adjustRelativeUrlForJavaBugs(buggyPath, relativeUrl))
+                URL(base, adjustRelativeUrlForJavaBugs(buggyPath, relativeUrl))
+            } else if (relativeUrl.startsWith('?')) {
+                URL(base, base.path + relativeUrl)// fix for: Java resolves '//path/file + ?foo' to '//path/?foo', not to '//path/file?foo'
             } else {
                 url
             }
