@@ -1,6 +1,6 @@
 package net.codinux.kotlin.text
 
-import net.codinux.kotlin.test.Assertions
+import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,7 +10,7 @@ class StringExtensionsTest {
     fun codePointWithoutSupplementaryCharacter() {
         val result = Char.fromCodePoint(197)
 
-        Assertions.assertElementsEqual(result, charArrayOf('Å'))
+        result.shouldBe(charArrayOf('Å'))
     }
 
     @Test
