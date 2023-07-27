@@ -6,13 +6,18 @@ actual class URL(private val impl: URL) {
 
     companion object {
 
-        private fun adjustRelativeUrlForJavaBugs(relativeUrl: String): String {
+        private fun adjustRelativeUrlForJavaBugs(buggyUrlPath: String, relativeUrl: String): String {
             // fix for: //example.com + ./foo = //example.com/./foo, not //example.com/foo
-            if (relativeUrl.startsWith("./")) {
-                return relativeUrl.substring(2)
+            var stringToRemove = ""
+            var handledPath = buggyUrlPath
+
+            while (handledPath.startsWith("../") || handledPath.startsWith("./")) {
+                val indexOfSlash = handledPath.indexOf('/')
+                stringToRemove += handledPath.substring(0, indexOfSlash + 1)
+                handledPath = handledPath.substring(indexOfSlash + 1)
             }
 
-            return relativeUrl
+            return relativeUrl.replaceFirst(stringToRemove, "")
         }
     }
 
@@ -24,7 +29,14 @@ actual class URL(private val impl: URL) {
     })
 
     actual constructor(baseUrl: String, relativeUrl: String) : this(try {
-        URL(URL(baseUrl), adjustRelativeUrlForJavaBugs(relativeUrl))
+        URL(URL(baseUrl), relativeUrl).let { url ->
+            if (url.path.startsWith("./") || url.path.startsWith("/./") || url.path.startsWith("../") || url.path.startsWith("/../")) {
+                val buggyPath = if (url.path.startsWith('/')) url.path.substring(1) else url.path
+                URL(URL(baseUrl), adjustRelativeUrlForJavaBugs(buggyPath, relativeUrl))
+            } else {
+                url
+            }
+        }
     } catch (e: Throwable) {
         throw URLParser.createMalformedUrlException("'$baseUrl' is not an absolute URL")
     })

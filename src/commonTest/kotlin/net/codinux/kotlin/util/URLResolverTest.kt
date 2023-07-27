@@ -82,7 +82,7 @@ class URLResolverTest {
 
     @Test
     fun relativeUrlIsDot_BaseUrlEndsWithSlash() {
-        val baseUrl = "http://example.com/path1/path2/"
+        val baseUrl = "https://codinux.net/path1/path2/"
 
         val result = URL(baseUrl, ".")
 
@@ -91,12 +91,12 @@ class URLResolverTest {
 
     @Test
     fun relativeUrlIsDot_BaseUrlDoesNotEndWithSlash() {
-        val baseUrl = "http://example.com/path1/path2"
+        val baseUrl = "https://codinux.net/path1/path2"
 
         val result = URL(baseUrl, ".")
 
         // the last path segment (file) gets removed
-        result.toString().shouldBe("http://example.com/path1/")
+        result.toString().shouldBe("https://codinux.net/path1/")
     }
 
     @Test
@@ -111,12 +111,53 @@ class URLResolverTest {
 
     @Test
     fun relativeUrlStartsWithDotSlashAndFile() {
-        val baseUrl = "http://example.com"
+        val baseUrl = "https://codinux.net"
         val relativeUrl = "./one/two.html"
 
         val result = underTest.resolveUrl(baseUrl, relativeUrl)
 
         result.shouldBe(baseUrl + relativeUrl.substring(1))
+    }
+
+
+    @Test
+    fun relativeUrlStartsWith1DotDotSlash() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "../one/two.html"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe("https://codinux.net/path1/path2" + relativeUrl.substring(2))
+    }
+
+    @Test
+    fun relativeUrlStartsWith2DotDotSlash() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "../../one/two.html"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe("https://codinux.net/path1" + relativeUrl.substring(5))
+    }
+
+    @Test
+    fun relativeUrlStartsWith3DotDotSlash() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "../../../one/two.html"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe("https://codinux.net" + relativeUrl.substring(8))
+    }
+
+    @Test
+    fun relativeUrlStartsWithMoreDotDotSlashThanBaseUrlHasPathSegments() {
+        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val relativeUrl = "../../../one/two.html"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe("https://codinux.net" + relativeUrl.substring(8))
     }
 
 }

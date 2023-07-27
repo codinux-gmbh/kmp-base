@@ -1,6 +1,7 @@
 package net.codinux.kotlin.util
 
 import net.codinux.kotlin.text.indexOfOrNull
+import net.codinux.kotlin.text.lastIndexOfOrNull
 
 class URLResolver {
 
@@ -13,6 +14,41 @@ class URLResolver {
     }
 
 
+    /**
+     * Resolves a relative URL to a base URL given that rules from [Wikipedia](https://en.wikipedia.org/wiki/Uniform_Resource_Identifier#URI_references):
+     *
+     * Given the base URI:
+     * ```
+     * http://a/b/c/d;p?q
+     * ```
+     *
+     * then:
+     * ```
+     * "g:h"     -> "g:h"
+     * "g"       -> "http://a/b/c/g"
+     * "./g"     -> "http://a/b/c/g"
+     * "g/"      -> "http://a/b/c/g/"
+     * "/g"      -> "http://a/g"
+     * "//g"     -> "http://g"
+     * "?y"      -> "http://a/b/c/d;p?y"
+     * "g?y"     -> "http://a/b/c/g?y"
+     * "#s"      -> "http://a/b/c/d;p?q#s"
+     * "g#s"     -> "http://a/b/c/g#s"
+     * "g?y#s"   -> "http://a/b/c/g?y#s"
+     * ";x"      -> "http://a/b/c/;x"
+     * "g;x"     -> "http://a/b/c/g;x"
+     * "g;x?y#s" -> "http://a/b/c/g;x?y#s"
+     * ""        -> "http://a/b/c/d;p?q"
+     * "."       -> "http://a/b/c/"
+     * "./"      -> "http://a/b/c/"
+     * ".."      -> "http://a/b/"
+     * "../"     -> "http://a/b/"
+     * "../g"    -> "http://a/b/g"
+     * "../.."   -> "http://a/"
+     * "../../"  -> "http://a/"
+     * "../../g" -> "http://a/g"
+     * ```
+     */
     fun resolveUrl(baseUrl: String, relativeUrl: String): String {
         if (isRelativeUrl(relativeUrl) == false) {
             throwNotARelativeUrlException(relativeUrl)
@@ -72,8 +108,22 @@ class URLResolver {
         }
     }
 
-    private fun resolveUrlByMovingUpPath(baseUrlWithPath: String, relativeUrl: String): String {
-        throw Exception("Resolving relative URLs that start with '../' is not implemented yet")
+    private fun resolveUrlByMovingUpPath(baseUrl: String, relativeUrl: String): String {
+        var handledBaseUrl = baseUrl
+        var handledRelativeUrl = relativeUrl
+        val schemeSeparatorIndex = baseUrl.indexOfOrNull("://")?.let { it + 2 }
+            ?: baseUrl.indexOfOrNull(":/")?.let { it + 1 }
+
+        while (handledRelativeUrl.startsWith("../")) {
+            val lastIndexOfSlash = handledBaseUrl.lastIndexOfOrNull('/')
+            if (lastIndexOfSlash != null && lastIndexOfSlash != schemeSeparatorIndex) { // only remove path segments if there are still path segments left in handledBaseUrl; but as Java and JS do not throw an exception we also don't
+                handledBaseUrl = handledBaseUrl.substring(0, lastIndexOfSlash)
+            }
+
+            handledRelativeUrl = handledRelativeUrl.substring(3)
+        }
+
+        return handledBaseUrl + "/" + handledRelativeUrl
     }
 
     fun isRelativeUrl(url: String): Boolean {
