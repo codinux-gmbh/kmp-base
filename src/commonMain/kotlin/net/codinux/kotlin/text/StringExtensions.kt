@@ -1,4 +1,4 @@
-package net.codinux.kotlin.util
+package net.codinux.kotlin.text
 
 fun String.indexOfOrNull(char: Char, startIndex: Int = 0, ignoreCase: Boolean = false): Int? =
     this.indexOf(char, startIndex, ignoreCase).takeIf { it > -1 }

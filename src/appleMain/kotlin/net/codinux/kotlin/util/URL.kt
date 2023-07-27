@@ -1,5 +1,6 @@
 package net.codinux.kotlin.util
 
+import net.codinux.kotlin.text.isNotNullOrBlank
 import platform.Foundation.NSURL
 
 actual class URL(private val impl: NSURL) {

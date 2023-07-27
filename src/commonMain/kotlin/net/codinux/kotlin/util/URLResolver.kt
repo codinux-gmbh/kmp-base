@@ -1,5 +1,7 @@
 package net.codinux.kotlin.util
 
+import net.codinux.kotlin.text.indexOfOrNull
+
 class URLResolver {
 
     companion object {

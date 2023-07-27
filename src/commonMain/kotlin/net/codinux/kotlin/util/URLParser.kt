@@ -2,6 +2,9 @@ package net.codinux.kotlin.util
 
 import net.codinux.kotlin.collections.ImmutableList
 import net.codinux.kotlin.collections.ImmutableMap
+import net.codinux.kotlin.text.countOccurrences
+import net.codinux.kotlin.text.indexOfOrNull
+import net.codinux.kotlin.text.lastIndexOfOrNull
 import kotlin.math.min
 
 /**
