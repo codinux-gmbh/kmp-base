@@ -93,7 +93,7 @@ class URLResolver {
         val thirdChar = if (relativeUrl.length >= 3) relativeUrl[2] else null
 
         return when (firstChar) {
-            '?', '#', ';' -> originalBaseUrl + relativeUrl // query or fragment
+            '?', '#', ';' -> removeQueryAndFragment(originalBaseUrl, baseUrlParts) + relativeUrl // query or fragment
             '/' -> if (secondChar == '/') { // // = domain relative url
                 baseUrlParts.scheme + ":" + relativeUrl
             } else if (secondChar?.isLetterOrDigit() == true) { // after check above second char must be a letter or digit then -> path or file
@@ -121,6 +121,9 @@ class URLResolver {
             else -> throwNotARelativeUrlException(relativeUrl) // should never come to this
         }
     }
+
+    private fun removeQueryAndFragment(baseUrl: String, baseUrlParts: URLParts) =
+        baseUrl.replace("?${baseUrlParts.query}", "").replace("#${baseUrlParts.fragment}", "")
 
     private fun resolveUrlByMovingUpPath(baseUrl: String, relativeUrl: String): String {
         var handledBaseUrl = baseUrl

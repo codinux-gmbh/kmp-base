@@ -79,6 +79,26 @@ class URLResolverTest {
         result.shouldBe(BaseUrl + relativeUrl)
     }
 
+    @Test
+    fun baseUrlEndsWithFileAndQueryAndRelativeUrlIsQuery() {
+        val baseUrl = "https://codinux.net/path/file?baseQuery"
+        val relativeUrl = "?query"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe("https://codinux.net/path/file" + relativeUrl)
+    }
+
+    @Test
+    fun baseUrlEndsWithFileAndQueryAndRelativeUrlEndsWithFileAndQuery() {
+        val baseUrl = "https://codinux.net/path/file?baseQuery"
+        val relativeUrl = "index.html?query"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe("https://codinux.net/path/" + relativeUrl)
+    }
+
 
     @Test
     fun relativeUrlIsDot_BaseUrlEndsWithSlash() {
