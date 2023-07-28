@@ -76,7 +76,6 @@ class URLResolver {
 
         val baseUrl = "${baseUrlParts.scheme}:" + (
                 baseUrlParts.authority?.let { "//${baseUrlParts.authority}" } ?: "")
-        // TODO: implement removing file for most cases
         val baseUrlWithPath = "$baseUrl${baseUrlParts.path?.let { "/$it" } ?: ""}".let {
             if (it.endsWith('/')) it.substring(0, it.lastIndex) else it
         }
@@ -91,21 +90,30 @@ class URLResolver {
         }
 
         val secondChar = if (relativeUrl.length >= 2) relativeUrl[1] else null
+        val thirdChar = if (relativeUrl.length >= 3) relativeUrl[2] else null
 
         return when (firstChar) {
             '?', '#', ';' -> originalBaseUrl + relativeUrl // query or fragment
-            '/' -> if (secondChar == '/') { // domain relative url
+            '/' -> if (secondChar == '/') { // // = domain relative url
                 baseUrlParts.scheme + ":" + relativeUrl
             } else if (secondChar?.isLetterOrDigit() == true) { // after check above second char must be a letter or digit then -> path or file
                 baseUrl + relativeUrl
+            } else if (secondChar == '.') { // /.
+                baseUrl + relativeUrl.replace("../", "").replace("./", "")
             } else { // should never come to this
                 throwNotARelativeUrlException(relativeUrl)
             }
-            '.' -> if (secondChar == '/') {
-                baseUrlWithPath + relativeUrl.substring(1)
-            } else if (secondChar == '.') {
+            '.' -> if (secondChar == '/') { // ./
                 resolveUrlByMovingUpPath(baseUrlWithPath, relativeUrl)
-            } else if (secondChar == null) {
+            } else if (secondChar == '.') { // ..
+                if (thirdChar == '/') { // ../
+                    resolveUrlByMovingUpPath(baseUrlWithPath, relativeUrl)
+                } else { // ..g
+                    baseUrlWithPath + "/" + relativeUrl
+                }
+            } else if (secondChar?.isLetterOrDigit() == true) { // .g
+                baseUrlWithPath + "/" + relativeUrl
+            } else if (secondChar == null) { // .
                 baseUrlWithPath
             } else { // should never come to this
                 throwNotARelativeUrlException(relativeUrl)
@@ -120,13 +128,17 @@ class URLResolver {
         val schemeSeparatorIndex = baseUrl.indexOfOrNull("://")?.let { it + 2 }
             ?: baseUrl.indexOfOrNull(":/")?.let { it + 1 }
 
-        while (handledRelativeUrl.startsWith("../")) {
-            val lastIndexOfSlash = handledBaseUrl.lastIndexOfOrNull('/')
-            if (lastIndexOfSlash != null && lastIndexOfSlash != schemeSeparatorIndex) { // only remove path segments if there are still path segments left in handledBaseUrl; but as Java and JS do not throw an exception we also don't
-                handledBaseUrl = handledBaseUrl.substring(0, lastIndexOfSlash)
-            }
+        while (handledRelativeUrl.startsWith("./") || handledRelativeUrl.startsWith("../")) {
+            if (handledRelativeUrl.startsWith("./")) {
+                handledRelativeUrl = handledRelativeUrl.substring(2)
+            } else if (handledRelativeUrl.startsWith("../")) {
+                val lastIndexOfSlash = handledBaseUrl.lastIndexOfOrNull('/')
+                if (lastIndexOfSlash != null && lastIndexOfSlash != schemeSeparatorIndex) { // only remove path segments if there are still path segments left in handledBaseUrl; but as Java and JS do not throw an exception we also don't
+                    handledBaseUrl = handledBaseUrl.substring(0, lastIndexOfSlash)
+                }
 
-            handledRelativeUrl = handledRelativeUrl.substring(3)
+                handledRelativeUrl = handledRelativeUrl.substring(3)
+            }
         }
 
         return handledBaseUrl + "/" + handledRelativeUrl
@@ -144,11 +156,16 @@ class URLResolver {
             '?', '#' -> true // query or fragment
             '/' -> secondChar == '/' // domain relative url
                     || secondChar?.isLetterOrDigit() == true // path or file
-            '.' -> secondChar == '/' || (secondChar == '.' && thirdChar == '/')
+                    || (secondChar == '.' && (thirdChar == '/' || thirdChar == '.'))
+            '.' -> secondChar == '/' || isValidPathCharacter(secondChar) ||
+                    (secondChar == '.' && (thirdChar == '/' || isValidPathCharacter(thirdChar)))
             ';' -> true // don't know what this means but it's listed on Wikipedia
             else -> url[0].isLetterOrDigit()
         }
     }
+
+    private fun isValidPathCharacter(char: Char?) =
+        char != null && char.isLetterOrDigit() // TODO: allow all valid characters
 
     private fun throwNotARelativeUrlException(relativeUrl: String): String =
         URLParser.throwMalformedUrlExceptionWithReturnType("'$relativeUrl' is not a relative URL. Relative URLs start with '//', '/', a letter, './', '../', '?', or '#'")
