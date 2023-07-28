@@ -116,7 +116,14 @@ class URLParser {
             throwMalformedUrlException("Invalid URL, the part after the scheme ('$scheme:') is empty")
         }
 
-        return scheme
+        /**
+         * According to [RFC-3987](https://datatracker.ietf.org/doc/html/rfc3986#section-3.1):
+         * "Although schemes are case-insensitive, the canonical form is lowercase and documents that specify schemes
+         * must do so with lowercase letters.  An implementation should accept uppercase letters as equivalent to
+         * lowercase in scheme names (e.g., allow "HTTP" as well as "http") for the sake of robustness but should only
+         * produce lowercase scheme names for consistency."
+         */
+        return scheme.lowercase()
     }
 
     /**

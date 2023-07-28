@@ -32,6 +32,24 @@ class URLParserTest {
         assertUrlParts(result, "tel", null, "867-5309")
     }
 
+    @Test
+    fun isUppercase() {
+        val url = "HTTPS://codinux.net"
+
+        val result = underTest.parse(url)
+
+        assertUrlParts(result, "https", "codinux.net")
+    }
+
+    @Test
+    fun unknownSchemeIsUppercase() {
+        val url = "TEL:867-5309"
+
+        val result = underTest.parse(url)
+
+        assertUrlParts(result, "tel", null, "867-5309")
+    }
+
 
     @Test
     fun schemeWithEmptyPath() {
