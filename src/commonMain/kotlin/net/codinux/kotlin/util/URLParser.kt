@@ -16,7 +16,7 @@ class URLParser {
 
         val Instance = URLParser()
 
-        val KnownSchemes = ImmutableList("http", "https", "ftp", "mailto", "file", "data", "irc", "gopher")
+        val SchemesThatAreFollowedBySlash = ImmutableList("http", "https", "ftp", "file", "irc", "gopher")
 
         const val MaxPortNumber = 65535
 
@@ -28,9 +28,13 @@ class URLParser {
             "ftp" to 20
         )
 
-        fun createMalformedUrlException(message: String) = IllegalArgumentException(message)
+        fun createMalformedUrlException(message: String, e: Throwable? = null) = IllegalArgumentException(message, e)
 
         fun throwMalformedUrlException(message: String) {
+            throw createMalformedUrlException(message)
+        }
+
+        fun <T> throwMalformedUrlExceptionWithReturnType(message: String): T { // just to have a return value and make compiler happy
             throw createMalformedUrlException(message)
         }
 
@@ -72,18 +76,28 @@ class URLParser {
     fun parse(url: String): URLParts {
         val scheme = extractScheme(url)
 
-        // TODO: mailto:, news:, tel: and urn: URIs do not have a slash after colon
-        val indexOfFirstSlash = scheme.length + 1
+        // mailto:, news:, tel: and urn: URIs do not have a slash after colon
+        val schemeIsFollowedBySlash = url.length > scheme.length + 1 && url[scheme.length + 1] == '/'
 
-        return if (url.length == indexOfFirstSlash + 1) { // no host and empty path
-            URLParts(scheme, null, null, null)
-        } else if (url[indexOfFirstSlash + 1] == '/') {
-            if (url.length == indexOfFirstSlash + 2) {
-                throwMalformedUrlException("After '://' a host has to be specified")
+        return if (schemeIsFollowedBySlash) {
+            val indexOfFirstSlash = scheme.length + 1
+            if (url.length == indexOfFirstSlash + 1) { // no host and empty path
+                URLParts(scheme, null, null, null)
+            } else if (url[indexOfFirstSlash + 1] == '/') {
+                if (url.length == indexOfFirstSlash + 2) {
+                    throwMalformedUrlException("After '://' a host has to be specified")
+                }
+                parseAuthorityAndPath(scheme, url.substring(indexOfFirstSlash + 2))
+            } else {
+                parsePath(scheme, url.substring(indexOfFirstSlash + 1))
             }
-            parseAuthorityAndPath(scheme, url.substring(indexOfFirstSlash + 2))
         } else {
-            parsePath(scheme, url.substring(indexOfFirstSlash + 1))
+            // a scheme no followed by a slash is valid for "mailto", "news", "tel", "urn", ... but not for "http", "https", "ftp", "file", ...
+            if (SchemesThatAreFollowedBySlash.contains(scheme.lowercase())) {
+                throwMalformedUrlExceptionWithReturnType("Scheme '$scheme' has to be followed by a colon an a slash. '$url' is therefor an invalid URL.")
+            } else {
+                parsePath(scheme, url.substring(scheme.length + 1))
+            }
         }
     }
 
@@ -94,16 +108,25 @@ class URLParser {
         }
 
         val scheme = url.substring(0, indexOfFirstColon!!)
-        if (KnownSchemes.none { it.equals(scheme, true) }) {
-            throwMalformedUrlException("'$scheme' is not a known scheme. Known schemes are: $KnownSchemes")
+        if (isValidScheme(scheme) == false) {
+            throwMalformedUrlException("'$scheme' is not a valid scheme. Valid schemes start with a letter and may only contain letters, digits, '+', '-' or '.'.")
         }
 
-        // TODO: mailto:, news:, tel: and urn: URIs do not have a slash after colon
-        if (url.length == indexOfFirstColon + 1 || url[indexOfFirstColon + 1] != '/') {
-            throwMalformedUrlException("The scheme ('$scheme:') has to be followed by a '/'")
+        if (url.length == indexOfFirstColon + 1) {
+            throwMalformedUrlException("Invalid URL, the part after the scheme ('$scheme:') is empty")
         }
 
         return scheme
+    }
+
+    /**
+     * According to [RFC-3986](https://datatracker.ietf.org/doc/html/rfc3986#section-3.1):
+     * scheme      = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+     */
+    private fun isValidScheme(scheme: String): Boolean {
+        return scheme.isNotBlank() &&
+                scheme[0].isLetter() &&
+                scheme.drop(1).all { it.isLetterOrDigit() || it == '+' || it == '-' || it == '.' }
     }
 
     private fun parseAuthorityAndPath(scheme: String, authorityAndPath: String): URLParts {

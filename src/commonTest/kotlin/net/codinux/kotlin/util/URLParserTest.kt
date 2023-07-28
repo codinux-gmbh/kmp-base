@@ -17,10 +17,19 @@ class URLParserTest {
     }
 
     @Test
-    fun schemeWithoutSlash() {
+    fun schemeOnly() {
         shouldThrow<IllegalArgumentException> {
             underTest.parse("http:")
         }
+    }
+
+    @Test
+    fun unknownScheme() {
+        val url = "tel:867-5309"
+
+        val result = underTest.parse(url)
+
+        assertUrlParts(result, "tel", null, "867-5309")
     }
 
 

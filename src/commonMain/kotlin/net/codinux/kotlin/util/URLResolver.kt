@@ -131,15 +131,6 @@ class URLResolver {
             return true
         }
 
-        try {
-            URLParser.Instance.extractScheme(url) // if the url has a scheme then it's no relative url
-            return false
-        } catch (ignored: Throwable) { }
-
-        url.indexOfOrNull(":/")?.let {
-            return false // relative URLs may not contain scheme separators
-        }
-
         val secondChar = if (url.length >= 2) url[1] else null
         val thirdChar = if (url.length >= 3) url[2] else null
 
@@ -153,10 +144,7 @@ class URLResolver {
         }
     }
 
-    private fun throwNotARelativeUrlException(relativeUrl: String): String {
-        URLParser.throwMalformedUrlException("'$relativeUrl' is not a relative URL. Relative URLs start with '//', '/', a letter, './', '../', '?', or '#'")
-
-        return "" // will never come to this due to exception thrown in throwMalformedUrlException(), just to make compiler happy with a virtual return type for when statements
-    }
+    private fun throwNotARelativeUrlException(relativeUrl: String): String =
+        URLParser.throwMalformedUrlExceptionWithReturnType("'$relativeUrl' is not a relative URL. Relative URLs start with '//', '/', a letter, './', '../', '?', or '#'")
 
 }

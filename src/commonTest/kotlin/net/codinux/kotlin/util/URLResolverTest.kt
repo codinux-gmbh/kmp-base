@@ -231,4 +231,14 @@ class URLResolverTest {
         result.shouldBe(baseUrl + relativeUrl)
     }
 
+    @Test
+    fun unknownScheme() {
+        val baseUrl = "https://codinux.net"
+        val relativeUrl = "tel:867-5309"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(relativeUrl)
+    }
+
 }
