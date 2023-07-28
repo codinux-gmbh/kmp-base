@@ -21,16 +21,16 @@ actual class URL(private val impl: NSURL) {
     actual constructor(url: String) : this(NSURL(string = url).apply {
         assertValidUrl(this, url)
     }) {
-        remedyValue(url)
+        remedyValues(url)
     }
 
     actual constructor(baseUrl: String, relativeUrl: String) : this(NSURL(string = relativeUrl, relativeToURL = NSURL(string = baseUrl)).apply {
         assertValidUrl(this, baseUrl)
     }) {
-        remedyValue(relativeUrl)
+        remedyValues(relativeUrl)
     }
 
-    private fun remedyValue(url: String) {
+    private fun remedyValues(url: String) {
         _path = impl.path?.takeIf { it.isNotBlank() }?.let {
             it.substring(1) // remove leading '/'
                 .takeIf { it.isNotBlank() }
@@ -40,11 +40,13 @@ actual class URL(private val impl: NSURL) {
             if (url.endsWith('/') || url.contains("/?") || url.contains("#/")) { // path originally ended with a slash ...
                 _path += "/" // but NSURL removes this trailing slash, so add it again to be consistent with other platforms' implementation
             }
+
+            _path = _path?.replace("../", "")?.replace("./", "")
         }
     }
 
 
-    actual val scheme = impl.scheme!! // we checked in constructor that scheme is not null
+    actual val scheme = impl.scheme!!.lowercase() // we checked in constructor that scheme is not null
 
     actual val host = impl.host
 
@@ -59,5 +61,8 @@ actual class URL(private val impl: NSURL) {
 
 
     override fun toString() = impl.absoluteString!!
+        .replaceFirst(impl.scheme!!, scheme)
+        .replace("../", "")
+        .replace("./", "")
 
 }
