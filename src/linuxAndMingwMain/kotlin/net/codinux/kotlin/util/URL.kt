@@ -20,6 +20,6 @@ actual class URL actual constructor(private val url: String) {
     actual val fragment = urlParts.fragment
 
 
-    override fun toString() = this.url
+    override fun toString() = this.url.replace(urlParts.schemeAsInOriginalString, urlParts.scheme)
 
 }

@@ -25,6 +25,8 @@ actual class URL(private val impl: URL) {
 
     private var hostWasEmptyInUrlString = false
 
+    private var urlStringsEndsWithSlash = false
+
     actual constructor(url: String) : this(try {
         URL(adjustUrlToMakeJavaScriptUrlParsingWork(url))
     } catch (e: Throwable) {
@@ -45,6 +47,10 @@ actual class URL(private val impl: URL) {
         // if only ':/' is specified, JavaScript does not recognize that only path but no domain is set
         if (needsAdjustmentForEmptyHost(url)) {
             hostWasEmptyInUrlString = true
+        }
+
+        if (url.isNotEmpty() && url.last() == '/') {
+            urlStringsEndsWithSlash = true
         }
 
         // JavaScript removes the port from URL if it's the protocol default port
@@ -84,6 +90,12 @@ actual class URL(private val impl: URL) {
     }
 
 
-    override fun toString() = impl.toString()
+    override fun toString() = impl.toString().let {
+        if (it.endsWith(host + "/") && urlStringsEndsWithSlash == false) {
+            it.substring(0, it.lastIndex) // JS adds a '/' to host even if there hasn't been any in original url
+        } else {
+            it
+        }
+    }
 
 }

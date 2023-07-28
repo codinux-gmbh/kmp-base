@@ -125,8 +125,8 @@ class URLTest {
     }
 
     @Test
-    fun urlDoesNotEndWithSlash() {
-        val url = "https://codinux.net/path1/path2"
+    fun urlWithFile() {
+        val url = "https://codinux.net/path1/file"
 
         val result = URL(url)
 
@@ -207,8 +207,8 @@ class URLTest {
     }
 
     @Test
-    fun relativeUrlIsDot_BaseUrlDoesNotEndWithSlash() {
-        val baseUrl = "https://codinux.net/path1/path2"
+    fun relativeUrlIsDot_BaseUrlEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/file"
 
         val result = URL(baseUrl, ".")
 
@@ -246,8 +246,8 @@ class URLTest {
     }
 
     @Test
-    fun baseUrlPathDoesNotEndWithSlash() {
-        val baseUrl = "https://codinux.net/path1/path2"
+    fun baseUrlPathEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/file"
         val relativeUrl = "./one/two.html"
 
         val result = URL(baseUrl, relativeUrl)
@@ -299,7 +299,7 @@ class URLTest {
 
     @Test
     fun relativeUrlStartsWith2MoreDotDotSlashThanBaseUrlHasPathSegments() {
-        val baseUrl = "https://codinux.net/path1/path2"
+        val baseUrl = "https://codinux.net/path1/file"
         val relativeUrl = "../../../one/two.html"
 
         val result = URL(baseUrl, relativeUrl)
