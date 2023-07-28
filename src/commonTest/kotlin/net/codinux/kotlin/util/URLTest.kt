@@ -8,6 +8,13 @@ import kotlin.test.Test
 class URLTest {
 
     @Test
+    fun schemeIsNotSet() {
+        shouldThrow<IllegalArgumentException> {
+            URL("www.codinux.net")
+        }
+    }
+
+    @Test
     fun schemeIsSet() {
         val result = URL("https://www.codinux.net")
 
@@ -15,10 +22,11 @@ class URLTest {
     }
 
     @Test
-    fun schemeIsNotSet() {
-        shouldThrow<IllegalArgumentException> {
-            URL("www.codinux.net")
-        }
+    fun schemeIsUppercase() {
+        val result = URL("HTTPS://codinux.net")
+
+        result.scheme.shouldBe("https")
+        result.toString().shouldBe("https://codinux.net")
     }
 
     @Test

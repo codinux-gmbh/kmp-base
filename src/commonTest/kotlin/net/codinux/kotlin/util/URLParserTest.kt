@@ -33,7 +33,7 @@ class URLParserTest {
     }
 
     @Test
-    fun isUppercase() {
+    fun schemeIsUppercase() {
         val url = "HTTPS://codinux.net"
 
         val result = underTest.parse(url)
