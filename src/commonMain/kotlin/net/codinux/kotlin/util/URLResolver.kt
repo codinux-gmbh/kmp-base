@@ -58,6 +58,19 @@ class URLResolver {
             throwNotARelativeUrlException(relativeUrl)
         }
 
+        if (relativeUrl.contains(':')) {
+            try {
+                URLParser.Instance.parse(relativeUrl) // relativeUrl is already an absolute URL then
+                return relativeUrl
+            } catch (ignored: Throwable) {
+                // manual test if relativeUrl fits scheme 'g:h'
+                val parts = relativeUrl.split(':')
+                if (parts.size == 2 && parts[0].all { it.isLetterOrDigit() } && parts[1].all { it.isLetterOrDigit() }) {
+                    return relativeUrl
+                }
+            }
+        }
+
         val baseParts = URLParser.Instance.parse(baseUrl)
 
         return resolveUrl(baseUrl, baseParts, relativeUrl)

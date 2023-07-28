@@ -371,4 +371,15 @@ class URLResolverTest {
         result.shouldBe(relativeUrl)
     }
 
+
+    @Test
+    fun relativeUrlAbsoluteUrl() {
+        val baseUrl = "https://codinux.net/path1/path2/file"
+        val relativeUrl = "http:codinux" // fits the form g:h
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(relativeUrl)
+    }
+
 }
