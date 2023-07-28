@@ -1,4 +1,9 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package net.codinux.kotlin.text
+
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 fun String.Companion.fromCodePoint(codePoint: Int): String =
     Char.fromCodePoint(codePoint).concatToString()
@@ -56,8 +61,18 @@ fun String.countOccurrences(string: String, startIndex: Int = 0, ignoreCase: Boo
     return count
 }
 
-fun String?.isNotNullOrEmpty() =
-    this.isNullOrEmpty() == false
+inline fun CharSequence?.isNotNullOrEmpty(): Boolean {
+    contract {
+        returns(true) implies (this@isNotNullOrEmpty != null)
+    }
 
-fun String?.isNotNullOrBlank() =
-    this.isNullOrBlank() == false
+    return this.isNullOrEmpty() == false
+}
+
+inline fun CharSequence?.isNotNullOrBlank(): Boolean {
+    contract {
+        returns(true) implies (this@isNotNullOrBlank != null)
+    }
+
+    return this.isNullOrBlank() == false
+}
