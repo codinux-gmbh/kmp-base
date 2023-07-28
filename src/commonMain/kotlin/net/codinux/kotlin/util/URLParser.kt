@@ -107,7 +107,10 @@ class URLParser {
     }
 
     private fun parseAuthorityAndPath(scheme: String, authorityAndPath: String): URLParts {
-        val pathStartIndex = authorityAndPath.indexOfOrNull('/') ?: authorityAndPath.length
+        val pathStartIndex = authorityAndPath.indexOfOrNull('/')
+            ?: authorityAndPath.indexOfOrNull('?')
+            ?: authorityAndPath.indexOfOrNull('#')
+            ?: authorityAndPath.length
         val authority = authorityAndPath.substring(0, pathStartIndex)
 
         if (authority.any { isInvalidAuthorityChar(it) }) {
@@ -154,7 +157,14 @@ class URLParser {
             hostAndPort
         }
 
-        val path = if (pathStartIndex == authorityAndPath.length) "" else authorityAndPath.substring(pathStartIndex + 1) // + 1 to remove leading slash
+        val path = if (pathStartIndex == authorityAndPath.length) {
+            ""
+        } else {
+            authorityAndPath.substring(pathStartIndex).let {
+                if (it.startsWith('/')) it.substring(1) // remove leading slash
+                else it
+            }
+        }
 
         return parsePath(scheme, path, authority, host, port, username, password, ipv6Address != null)
     }

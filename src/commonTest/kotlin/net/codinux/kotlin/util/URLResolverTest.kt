@@ -110,6 +110,36 @@ class URLResolverTest {
     }
 
     @Test
+    fun relativeUrlStartsWithDotAndSlash_BaseUrlWithoutPath() {
+        val baseUrl = "https://codinux.net"
+        val relativeUrl = "./one/two?three"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl + relativeUrl.substring(1))
+    }
+
+    @Test
+    fun relativeUrlStartsWithDotAndSlash_BaseUrlWithoutPathButWithQuery() {
+        val baseUrl = "https://codinux.net?one"
+        val relativeUrl = "./one/two?three"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl.replace("?one", "") + relativeUrl.substring(1))
+    }
+
+    @Test
+    fun relativeUrlStartsWithDotAndSlash_BaseUrlWithoutPathButWithFragment() {
+        val baseUrl = "https://codinux.net#fragment"
+        val relativeUrl = "./one/two#fragment"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl.replace("#fragment", "") + relativeUrl.substring(1))
+    }
+
+    @Test
     fun relativeUrlStartsWithDotSlashAndFile() {
         val baseUrl = "https://codinux.net"
         val relativeUrl = "./one/two.html"
