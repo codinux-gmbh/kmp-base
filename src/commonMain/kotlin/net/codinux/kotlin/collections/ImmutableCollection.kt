@@ -15,4 +15,6 @@ class ImmutableCollection<E>(private val wrapped: Collection<E>) : Collection<E>
 
     override fun iterator() = wrapped.iterator()
 
+    override fun toString() = wrapped.toString()
+
 }

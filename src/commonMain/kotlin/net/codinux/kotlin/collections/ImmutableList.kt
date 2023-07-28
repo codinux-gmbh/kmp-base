@@ -27,4 +27,6 @@ class ImmutableList<E>(private val wrapped: List<E>) : List<E> {
 
     override fun subList(fromIndex: Int, toIndex: Int) = wrapped.subList(fromIndex, toIndex)
 
+    override fun toString() = wrapped.toString()
+
 }

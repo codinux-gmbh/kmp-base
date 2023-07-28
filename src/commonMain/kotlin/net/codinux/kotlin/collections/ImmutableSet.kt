@@ -15,4 +15,6 @@ class ImmutableSet<E>(private val wrapped: Set<E>) : Set<E> {
 
     override fun iterator() = wrapped.iterator()
 
+    override fun toString() = wrapped.toString()
+
 }

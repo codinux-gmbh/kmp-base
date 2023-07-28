@@ -54,4 +54,6 @@ open class OpenArrayList<E>(private val impl: MutableList<E>) : MutableList<E> {
 
     override fun clear() = impl.clear()
 
+    override fun toString() = impl.toString()
+
 }

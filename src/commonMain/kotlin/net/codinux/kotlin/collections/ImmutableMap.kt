@@ -22,4 +22,6 @@ class ImmutableMap<K, V>(private val wrapped: Map<K, V>) : Map<K, V> {
 
     override fun get(key: K) = wrapped.get(key)
 
+    override fun toString() = wrapped.toString()
+
 }
