@@ -214,7 +214,7 @@ class URLTest {
         val result = URL(URLResolverTest.BaseUrlWithPathQueryAndFragment, relativeUrl)
 
         // the last path segment (file) gets removed
-        result.toString().shouldBe(URLResolverTest.BaseUrlWithPath.replace("/path3", "") + relativeUrl.substring(1))
+        result.toString().shouldBe(URLResolverTest.BaseUrlWithPath.replace("/file", "") + relativeUrl.substring(1))
     }
 
     @Test
@@ -281,7 +281,7 @@ class URLTest {
 
     @Test
     fun relativeUrlStartsWith1MoreDotDotSlashThanBaseUrlHasPathSegments() {
-        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val baseUrl = "https://codinux.net/path1/path2/file"
         val relativeUrl = "../../../one/two.html"
 
         val result = URL(baseUrl, relativeUrl)
@@ -312,7 +312,7 @@ class URLTest {
 
     @Test
     fun relativeUrlIsQuery_BaseUrlEndsWithFile() {
-        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val baseUrl = "https://codinux.net/path1/path2/file"
         val relativeUrl = "?name1=value1&name2=value2"
 
         val result = URL(baseUrl, relativeUrl)
@@ -332,7 +332,7 @@ class URLTest {
 
     @Test
     fun relativeUrlIsFragment_BaseUrlEndsWithFile() {
-        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val baseUrl = "https://codinux.net/path1/path2/file"
         val relativeUrl = "#fragment"
 
         val result = URL(baseUrl, relativeUrl)

@@ -50,6 +50,10 @@ class URLResolver {
      * ```
      */
     fun resolveUrl(baseUrl: String, relativeUrl: String): String {
+        if (relativeUrl.isEmpty()) { // the trivial case
+            return baseUrl
+        }
+
         if (isRelativeUrl(relativeUrl) == false) {
             throwNotARelativeUrlException(relativeUrl)
         }
@@ -101,6 +105,8 @@ class URLResolver {
                 baseUrlWithPath + relativeUrl.substring(1)
             } else if (secondChar == '.') {
                 resolveUrlByMovingUpPath(baseUrlWithPath, relativeUrl)
+            } else if (secondChar == null) {
+                baseUrlWithPath
             } else { // should never come to this
                 throwNotARelativeUrlException(relativeUrl)
             }
@@ -127,7 +133,7 @@ class URLResolver {
     }
 
     fun isRelativeUrl(url: String): Boolean {
-        if (url.isEmpty() || url == "." || url == "/") { // the trivial case
+        if (url.isEmpty() || url == "." || url == "/") { // the trivial cases
             return true
         }
 

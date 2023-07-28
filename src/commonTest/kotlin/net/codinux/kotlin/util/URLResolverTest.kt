@@ -7,7 +7,7 @@ class URLResolverTest {
 
     companion object {
         const val BaseUrl = "https://www.codinux.net"
-        const val BaseUrlWithPath = "$BaseUrl/path1/path2/path3"
+        const val BaseUrlWithPath = "$BaseUrl/path1/path2/file"
         const val Query = "?name1=value1&name2=value2"
         const val Fragment = "#fragment"
         const val BaseUrlWithPathQueryAndFragment = "$BaseUrlWithPath$Query$Fragment"
@@ -106,7 +106,7 @@ class URLResolverTest {
         val result = underTest.resolveUrl(BaseUrlWithPathQueryAndFragment, relativeUrl)
 
         // the last path segment (file) gets removed
-        result.shouldBe(BaseUrlWithPath.replace("/path3", "") + relativeUrl.substring(1))
+        result.shouldBe(BaseUrlWithPath.replace("/file", "") + relativeUrl.substring(1))
     }
 
     @Test
@@ -182,7 +182,7 @@ class URLResolverTest {
 
     @Test
     fun relativeUrlStartsWithMoreDotDotSlashThanBaseUrlHasPathSegments() {
-        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val baseUrl = "https://codinux.net/path1/path2/file"
         val relativeUrl = "../../../one/two.html"
 
         val result = underTest.resolveUrl(baseUrl, relativeUrl)
@@ -203,7 +203,7 @@ class URLResolverTest {
 
     @Test
     fun relativeUrlIsQuery_BaseUrlEndsWithFile() {
-        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val baseUrl = "https://codinux.net/path1/path2/file"
         val relativeUrl = "?name1=value1&name2=value2"
 
         val result = underTest.resolveUrl(baseUrl, relativeUrl)
@@ -223,12 +223,72 @@ class URLResolverTest {
 
     @Test
     fun relativeUrlIsFragment_BaseUrlEndsWithFile() {
-        val baseUrl = "https://codinux.net/path1/path2/path3"
+        val baseUrl = "https://codinux.net/path1/path2/file"
         val relativeUrl = "#fragment"
 
         val result = underTest.resolveUrl(baseUrl, relativeUrl)
 
         result.shouldBe(baseUrl + relativeUrl)
+    }
+
+    @Test
+    fun relativeUrlIsEmpty_BaseUrlEndsWithPathSegment() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = ""
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl)
+    }
+
+    @Test
+    fun relativeUrlIsEmpty_BaseUrlEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/path2/file"
+        val relativeUrl = ""
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl)
+    }
+
+    @Test
+    fun relativeUrlIsDot_BaseUrlEndsWithPathSegment() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "."
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl)
+    }
+
+    @Test
+    fun relativeUrlIsDot_BaseUrlEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/path2/file"
+        val relativeUrl = "."
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl.replace("file", ""))
+    }
+
+    @Test
+    fun relativeUrlIsSlash_BaseUrlEndsWithPathSegment() {
+        val baseUrl = "https://codinux.net/path1/path2/path3/"
+        val relativeUrl = "/"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl)
+    }
+
+    @Test
+    fun relativeUrlIsSlash_BaseUrlEndsWithFile() {
+        val baseUrl = "https://codinux.net/path1/path2/file"
+        val relativeUrl = "/"
+
+        val result = underTest.resolveUrl(baseUrl, relativeUrl)
+
+        result.shouldBe(baseUrl.replace("file", ""))
     }
 
     @Test
