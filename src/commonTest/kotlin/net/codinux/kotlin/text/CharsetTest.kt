@@ -13,7 +13,7 @@ class CharsetTest {
         val text = "{Test\uD83D\uDE00}"
         assertEquals(
             listOf(123, 84, 101, 115, 116, -16, -97, -104, -128, 125),
-            text.toByteArray(UTF8).map { it.toInt() }
+            text.toByteArray(Charsets.UTF8).map { it.toInt() }
         )
     }
 
@@ -22,7 +22,7 @@ class CharsetTest {
         val text = "{Test\uD83D\uDE00}"
         assertEquals(
             text,
-            text.toByteArray(UTF8).toString(UTF8).toByteArray(UTF8).toString(UTF8)
+            text.toByteArray(Charsets.UTF8).toString(Charsets.UTF8).toByteArray(Charsets.UTF8).toString(Charsets.UTF8)
         )
     }
 
@@ -31,7 +31,7 @@ class CharsetTest {
         val text = byteArrayOf(-87, 32, 50, 48, 48, 57, 32, 45, 32, 50, 48, 49)
         assertEquals(
             "\uFFFD 2009 - 201",
-            text.toString(UTF8)
+            text.toString(Charsets.UTF8)
         )
     }
 
@@ -40,20 +40,22 @@ class CharsetTest {
         val text = (0 until 255).map { it.toChar() }.joinToString("")
         assertEquals(
             text,
-            text.toByteArray(UTF8).toString(UTF8)
+            text.toByteArray(Charsets.UTF8).toString(Charsets.UTF8)
         )
     }
 
     @Test
     fun testUTF16() {
-        assertEquals("emoji", "0065006d006f006a0069".unhex.toString(UTF16_BE))
-        assertEquals("emoji", "65006d006f006a006900".unhex.toString(UTF16_LE))
+        assertEquals("emoji", "0065006d006f006a0069".unhex.toString(Charsets.UTF16_BE))
+        assertEquals("emoji", "65006d006f006a006900".unhex.toString(Charsets.UTF16_LE))
     }
 
     @Test
     fun testCharsetForName() {
         assertEquals(
             """
+                US-ASCII
+                US-ASCII
                 UTF-8
                 UTF-16-LE
                 UTF-16-LE
@@ -61,7 +63,7 @@ class CharsetTest {
                 ISO-8859-1
                 ISO-8859-1
             """.trimIndent(),
-            listOf("UTF-8", "UTF-16", "UTF-16-LE", "UTF-16-BE", "LATIN-1", "ISO-8859-1")
+            listOf("ASCII", "US-ASCII", "UTF-8", "UTF-16", "UTF-16-LE", "UTF-16-BE", "LATIN-1", "ISO-8859-1")
                 .joinToString("\n") { Charset.forName(it).name }
         )
         assertFailsWith<IllegalArgumentException> { Charset.forName("MY-UNKNOWN-CHARSET") }
@@ -69,7 +71,7 @@ class CharsetTest {
 
     @Test
     fun testPartialDecode() {
-        val charset = UTF8
+        val charset = Charsets.UTF8
         val text = "hello你好"
         val bytes = text.toByteArray(charset)
         val out = StringBuilder()

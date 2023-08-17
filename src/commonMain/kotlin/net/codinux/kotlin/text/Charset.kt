@@ -32,10 +32,11 @@ abstract class Charset(val name: String) {
         fun forName(name: String): Charset {
             val normalizedName = name.uppercase().replace("_", "").replace("-", "")
             when (normalizedName) {
-                "UTF8" -> return UTF8
-                "UTF16", "UTF16LE" -> return UTF16_LE
-                "UTF16BE" -> return UTF16_BE
-                "ISO88591", "LATIN1" -> return ISO_8859_1
+                "ASCII", "USASCII" -> return Charsets.US_ASCII
+                "UTF8" -> return Charsets.UTF8
+                "UTF16", "UTF16LE" -> return Charsets.UTF16_LE
+                "UTF16BE" -> return Charsets.UTF16_BE
+                "ISO88591", "LATIN1" -> return Charsets.ISO_8859_1
             }
 
 //            platformCharsetProvider(normalizedName, name)?.let { return it }
@@ -177,10 +178,6 @@ open class SingleByteCharset(name: String, private val supportedChars: List<Char
 	}
 }
 
-object ISO_8859_1 : SingleByteCharset("ISO-8859-1", (0 until 256).map { it.toChar() })
-
-val UTF8: Charset = UTC8CharsetBase("UTF-8")
-
 class UTF16Charset(val le: Boolean) : Charset("UTF-16-" + (if (le) "LE" else "BE")) {
     override fun estimateNumberOfCharactersForBytes(nbytes: Int): Int = nbytes * 2
     override fun estimateNumberOfBytesForCharacters(nchars: Int): Int = nchars * 2
@@ -204,26 +201,7 @@ class UTF16Charset(val le: Boolean) : Charset("UTF-16-" + (if (le) "LE" else "BE
 	}
 }
 
-private val asciiSupportedCharacters = (0 until 128).map { it.toChar() }.toMutableList().apply { 
-    addAll(listOf('\u00c7', '\u00fc', '\u00e9', '\u00e2', '\u00e4', '\u00e0', '\u00e5', '\u00e7', '\u00ea', '\u00eb', '\u00e8', '\u00ef', '\u00ee', '\u00ec', '\u00c4', '\u00c5', '\u00c9', '\u00e6', '\u00c6', '\u00f4', '\u00f6', '\u00f2', '\u00fb', '\u00f9', '\u00ff', '\u00d6', '\u00dc', '\u00f8', '\u00a3', '\u00d8', '\u00d7', '\u0192', '\u00e1', '\u00ed', '\u00f3', '\u00fa', '\u00f1', '\u00d1', '\u00aa', '\u00ba', '\u00bf', '\u00ae', '\u00ac', '\u00bd', '\u00bc', '\u00a1', '\u00ab', '\u00bb', '\u2591', '\u2592', '\u2593', '\u2502', '\u2524', '\u00c1', '\u00c2', '\u00c0', '\u00a9', '\u2563', '\u2551', '\u2557', '\u255d', '\u00a2', '\u00a5', '\u2510', '\u2514', '\u2534', '\u252c', '\u251c', '\u2500', '\u253c', '\u00e3', '\u00c3', '\u255a', '\u2554', '\u2569', '\u2566', '\u2560', '\u2550', '\u256c', '\u00a4', '\u00f0', '\u00d0', '\u00ca', '\u00cb', '\u00c8', '\u0131', '\u00cd', '\u00ce', '\u00cf', '\u2518', '\u250c', '\u2588', '\u2584', '\u00a6', '\u00cc', '\u2580', '\u00d3', '\u00df', '\u00d4', '\u00d2', '\u00f5', '\u00d5', '\u00b5', '\u00fe', '\u00de', '\u00da', '\u00db', '\u00d9', '\u00fd', '\u00dd', '\u00af', '\u00b4', '\u00ad', '\u00b1', '\u2017', '\u00be', '\u00b6', '\u00a7', '\u00f7', '\u00b8', '\u00b0', '\u00a8', '\u00b7', '\u00b9', '\u00b3', '\u00b2', '\u25a0', '\u00a0'))
-}
-
-object ASCII : SingleByteCharset("ASCII", asciiSupportedCharacters)
-
-val LATIN1 = ISO_8859_1
-
-val UTF16_LE = UTF16Charset(le = true)
-
-val UTF16_BE = UTF16Charset(le = false)
-
-object Charsets {
-	val UTF8 get() = net.codinux.kotlin.text.UTF8
-	val LATIN1 get() = net.codinux.kotlin.text.LATIN1
-	val UTF16_LE get() = net.codinux.kotlin.text.UTF16_LE
-	val UTF16_BE get() = net.codinux.kotlin.text.UTF16_BE
-}
-
-fun String.toByteArray(charset: Charset = UTF8, start: Int = 0, end: Int = this.length): ByteArray {
+fun String.toByteArray(charset: Charset = Charsets.UTF8, start: Int = 0, end: Int = this.length): ByteArray {
 	val out = ByteArrayBuilder(charset.estimateNumberOfBytesForCharacters(end - start))
 	charset.encode(out, this, start, end)
 	return out.toByteArray()
@@ -235,7 +213,7 @@ fun ByteArray.toString(charset: Charset, start: Int = 0, end: Int = this.size): 
 	return out.toString()
 }
 
-fun ByteArray.readStringz(o: Int, size: Int, charset: Charset = UTF8): String {
+fun ByteArray.readStringz(o: Int, size: Int, charset: Charset = Charsets.UTF8): String {
 	var idx = o
 	val stop = min(this.size, o + size)
 	while (idx < stop) {
@@ -245,10 +223,10 @@ fun ByteArray.readStringz(o: Int, size: Int, charset: Charset = UTF8): String {
 	return this.copyOfRange(o, idx).toString(charset)
 }
 
-fun ByteArray.readStringz(o: Int, charset: Charset = UTF8): String {
+fun ByteArray.readStringz(o: Int, charset: Charset = Charsets.UTF8): String {
 	return readStringz(o, size - o, charset)
 }
 
-fun ByteArray.readString(o: Int, size: Int, charset: Charset = UTF8): String {
+fun ByteArray.readString(o: Int, size: Int, charset: Charset = Charsets.UTF8): String {
 	return this.copyOfRange(o, o + size).toString(charset)
 }
