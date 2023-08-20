@@ -1,5 +1,6 @@
 package net.codinux.kotlin.text
 
+import net.codinux.collections.immutableMapOf
 import net.codinux.collections.toImmutableList
 
 object Charsets {
@@ -10,12 +11,22 @@ object Charsets {
 
     val US_ASCII by lazy { SingleByteCharset("US-ASCII", asciiSupportedCharacters) }
 
-    val UTF8 by lazy { UTC8CharsetBase("UTF-8") }
-
     val ISO_8859_1 by lazy { SingleByteCharset("ISO-8859-1", (0 until 256).map { it.toChar() }) }
+
+    val UTF8 by lazy { UTC8CharsetBase("UTF-8") }
 
     val UTF16_LE by lazy { UTF16Charset(le = true) }
 
     val UTF16_BE by lazy { UTF16Charset(le = false) }
+
+    val StandardCharsets by lazy {
+        immutableMapOf(
+            US_ASCII.name to US_ASCII,
+            ISO_8859_1.name to ISO_8859_1,
+            UTF8.name to UTF8,
+            UTF16_LE.name to UTF16_LE,
+            UTF16_BE.name to UTF16_BE
+        )
+    }
 
 }

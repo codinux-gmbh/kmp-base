@@ -1,0 +1,45 @@
+
+|===
+| Name, Aliases | Count Bytes | Region | Note
+
+| UTF-8 | 1 - 4 | | can encode all 1,112,064 valid character code points in Unicode; backward compatible with ASCII
+| UTF-16 | 2 or 4 | | used by Windows API, Java, JavaScript, SMS; defines the number of 1,112,064 valid Unicode code points; incompatible with ASCII, that's why it never gained popularity on the Web
+| UTF-32 | 4 | | Uses actually only 21 of the 32 bits; Finding the Nth code point in a sequence of code points is a constant-time operation. In contrast, a variable-length code requires linear-time; space-inefficient, 11 bits are always zero, close to twice the size of UTF-16
+| ISO 8859-1, Windows-1252, Latin1 | 1 | Western European |
+| Windows-1251, ISO-8859-2 (similar, but not identical), Latin2 | 1 | Eastern European / Cyrillic |
+| Windows-1250, ISO-8859-2 (similar, but not identical) | 1 | Czech, Polish, Hungarian, ... |
+| ISO-8859-15, Latin9 | 1 | Germany | Equals ISO-8859-1 except the 4 characters €, Œ, œ, and Ÿ
+| KOI8-R | 1 | Cyrillic, Russian and Bulgarian |
+| KOI8-U | 1 | Cyrillic, Ukrainian |
+| Shift JIS | 2 | Japanese |
+| EUC (Extended Unix Code) | 1 (ISO/IEC 646 compliant character), 2 (EUC-CN / GB 2312, EUC-KR), up to 3 (EUC-JP), up to 4 (EUC-TW) | Japanese, Korean, Simplified Chinese |
+| ISO-2022 | variable multi-byte | CJK |
+| GB 2312, GB2312, EUC-CN, ISO-2022-CN | 2 | Simplified Chinese | Conforms to ISO-2022; second most used in Chinese websites (5.5 %)
+| GBK | 1 or 2 | Simplified Chinese | Superset of GB 2312, includes all unified CJK characters found in GB 13000; third most using in Chinese websites (1.9 %)
+| Big5, Big-5 | 2 | Traditional Chinese; Taiwan, Hong Kong, Macau | Does not conform to ISO-2022
+|===
+
+For a comprehensive list of Charsets see https://github.com/unicode-org/icu/blob/main/icu4c/source/data/mappings/convrtrs.txt
+
+For a list of Encodings supported by JavaScript see https://encoding.spec.whatwg.org/#concept-encoding-get
+
+Usage statistics of character encodings for websites: https://w3techs.com/technologies/history_overview/character_encoding
+
+
+== UTF-8
+
+UTF-8 encodes code points in one to four bytes, depending on the value of the code point. In the following table, the x characters are replaced by the bits of the code point:
+Code point ↔ UTF-8 conversion
+
+|===
+| First code point 	| Last code point 	| Byte 1 	| Byte 2 	| Byte 3 	| Byte 4
+
+| U+0000 	| U+007F 	| 0xxxxxxx  |           |           |
+| U+0080 	| U+07FF 	| 110xxxxx 	| 10xxxxxx  |           |
+| U+0800 	| U+FFFF 	| 1110xxxx 	| 10xxxxxx 	| 10xxxxxx  |
+| U+10000 	| U+10FFFF 	| 11110xxx 	| 10xxxxxx 	| 10xxxxxx 	| 10xxxxxx
+|===
+
+The first 128 code points (ASCII) need one byte. The next 1,920 code points need two bytes to encode, which covers the remainder of almost all Latin-script alphabets, and also IPA extensions, Greek, Cyrillic, Coptic, Armenian, Hebrew, Arabic, Syriac, Thaana and N'Ko alphabets, as well as Combining Diacritical Marks. Three bytes are needed for the remaining 61,440 code points of the Basic Multilingual Plane (BMP), including most Chinese, Japanese and Korean characters. Four bytes are needed for the 1,048,576 code points in the other planes of Unicode, which include emoji (pictographic symbols), less common CJK characters, various historic scripts, and mathematical symbols.
+
+A "character" can take more than 4 bytes because it is made of more than one code point. For instance a national flag character takes 8 bytes since it is "constructed from a pair of Unicode scalar values" both from outside the BMP.

@@ -19,6 +19,8 @@ enum class PlatformType {
 
     val DarwinPlatforms by lazy { immutableListOf(MacOS, iOS, tvOS, watchOS) }
 
+    val isJvmOrAndroid by lazy { this == JVM || this == Android }
+
     val isJavaScript by lazy { this == JavaScriptBrowser || this == NodeJS }
 
     val isNative by lazy { this == Linux || this == Windows || isDarwin }

@@ -1,10 +1,11 @@
 package net.codinux.kotlin.text
 
+import io.kotest.matchers.collections.shouldHaveAtLeastSize
 import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import net.codinux.kotlin.encoding.unhex
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 // Copied from korlibs/korge: https://github.com/korlibs/korge/blob/main/korio/src/commonTest/kotlin/korlibs/io/lang/CharsetTest.kt
 
@@ -83,6 +84,7 @@ class CharsetTest {
         val outIncomplete = StringBuilder()
         val read = charset.decode(out, bytes, 1, bytes.size)
         val readIncomplete = charset.decode(outIncomplete, bytes, 1, bytes.size - 1)
+
         assertEquals(
             """
                 'ello你好' - 10
@@ -94,4 +96,17 @@ class CharsetTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun availableCharsets() {
+        val availableCharsets = Charset.availableCharsets
+
+        availableCharsets.entries.shouldHaveAtLeastSize(Charsets.StandardCharsets.size)
+
+        // assert availableCharsets contains all standard Charsets
+        Charsets.StandardCharsets.forEach { (name, charset) ->
+            availableCharsets[name].shouldBe(charset)
+        }
+    }
+
 }

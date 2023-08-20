@@ -1,5 +1,6 @@
 package net.codinux.kotlin.text
 
+import net.codinux.collections.toImmutableMap
 import net.codinux.kotlin.lang.*
 
 // Copied from korlibs/korge: https://github.com/korlibs/korge/blob/main/korio/src/commonMain/kotlin/korlibs/io/lang/Charset.kt
@@ -19,6 +20,8 @@ abstract class Charset(val name: String) {
      */
     open val canEncode = true
 
+    val isUnicodeCharset = name.startsWith("UTF-", true)
+
 	abstract fun encode(out: ByteArrayBuilder, src: CharSequence, start: Int = 0, end: Int = src.length)
 
     /**
@@ -32,6 +35,19 @@ abstract class Charset(val name: String) {
     override fun toString() = name
 
 	companion object {
+
+        private val platformCharsets by lazy { CharsetPlatform.availableCharsets }
+
+        val availableCharsets by lazy {
+            val charsets = platformCharsets.toMutableMap()
+
+            // ensure platform specific implementation of standard Charsets gets replaced by our implementation (TODO: sensful?)
+            Charsets.StandardCharsets.forEach { (name, charset) ->
+                charsets[name] = charset
+            }
+
+            charsets.toImmutableMap()
+        }
 
         fun forName(charsetName: String): Charset? {
             val normalizedName = charsetName.uppercase().replace("_", "").replace("-", "")

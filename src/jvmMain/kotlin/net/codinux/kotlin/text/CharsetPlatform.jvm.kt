@@ -1,11 +1,18 @@
 package net.codinux.kotlin.text
 
+import net.codinux.collections.toImmutableMap
 import net.codinux.kotlin.lang.ByteArrayBuilder
 import java.nio.ByteBuffer
 import java.nio.CharBuffer
 import java.nio.charset.CodingErrorAction
 
 internal actual object CharsetPlatform {
+
+    actual val availableCharsets: Map<String, Charset> by lazy {
+        java.nio.charset.Charset.availableCharsets()
+            .map { (name, charset) -> name to JvmCharset(name, charset) }
+            .toImmutableMap()
+    }
 
     actual fun forName(charsetName: String): Charset? = try {
         java.nio.charset.Charset.forName(charsetName)?.let { charset ->
