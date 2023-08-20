@@ -6,6 +6,8 @@ expect class Internal {
 
     companion object {
 
+        val AvailableLocales: List<Locale>
+
         fun getSystemLocale(): Locale
 
     }

@@ -1,10 +1,24 @@
 package net.codinux.kotlin.util
 
 import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.ints.shouldBeBetween
+import net.codinux.kotlin.Platform
+import net.codinux.kotlin.PlatformType
 import kotlin.test.Test
 
 class LocaleTest {
+
+    @Test
+    fun availableLocales() {
+        val availableLocales = Locale.AvailableLocales
+
+        if (Platform.type != PlatformType.Linux && Platform.type != PlatformType.Windows) {
+            println("${Platform.type} has ${availableLocales.size} Locales")
+
+            availableLocales.shouldNotBeEmpty()
+        }
+    }
 
     @Test
     fun getSystemDefaultLocale() {
