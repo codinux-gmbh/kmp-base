@@ -77,7 +77,11 @@ kotlin {
         val coroutinesVersion: String by project
         val kotestVersion: String by project
 
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation("net.codinux.collections:immutable-collections:1.0.0")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))

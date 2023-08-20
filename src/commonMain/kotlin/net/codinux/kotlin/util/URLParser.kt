@@ -1,7 +1,7 @@
 package net.codinux.kotlin.util
 
-import net.codinux.kotlin.collections.ImmutableList
-import net.codinux.kotlin.collections.ImmutableMap
+import net.codinux.collections.immutableListOf
+import net.codinux.collections.immutableMapOf
 import net.codinux.kotlin.text.countOccurrences
 import net.codinux.kotlin.text.indexOfOrNull
 import net.codinux.kotlin.text.lastIndexOfOrNull
@@ -16,13 +16,13 @@ class URLParser {
 
         val Instance = URLParser()
 
-        val SchemesThatAreFollowedBySlash = ImmutableList("http", "https", "ftp", "file", "irc", "gopher")
+        val SchemesThatAreFollowedBySlash = immutableListOf("http", "https", "ftp", "file", "irc", "gopher")
 
         const val MaxPortNumber = 65535
 
         val IPv6Regex = Regex("""(?:[\da-fA-F]{0,4}:){1,7}(?:(?<ipv4>(?:(?:25[0-5]|2[0-4]\d|1?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|1?\d\d?))|[\da-f]{0,4})""")
 
-        val ProtocolDefaultPorts = ImmutableMap(
+        val ProtocolDefaultPorts = immutableMapOf(
             "http" to 80,
             "https" to 443,
             "ftp" to 20

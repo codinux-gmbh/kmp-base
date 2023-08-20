@@ -1,6 +1,6 @@
 package net.codinux.kotlin
 
-import net.codinux.kotlin.collections.ImmutableList
+import net.codinux.collections.immutableListOf
 
 enum class PlatformType {
 
@@ -17,7 +17,7 @@ enum class PlatformType {
     WASM,
     Unknown;
 
-    val DarwinPlatforms by lazy { ImmutableList(MacOS, iOS, tvOS, watchOS) }
+    val DarwinPlatforms by lazy { immutableListOf(MacOS, iOS, tvOS, watchOS) }
 
     val isJavaScript by lazy { this == JavaScriptBrowser || this == NodeJS }
 
