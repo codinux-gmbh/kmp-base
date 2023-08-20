@@ -9,8 +9,8 @@ fun Char.Companion.fromCodePoint(codePoint: Int): CharArray =
     when {
         codePoint in 0 until MinSupplementaryCodePoint -> charArrayOf(codePoint.toChar())
         codePoint in MinSupplementaryCodePoint..MaxCodePoint -> {
-            val low = ((codePoint - 0x10000) and 0x3FF) + Char.MIN_LOW_SURROGATE.toInt()
-            val high = (((codePoint - 0x10000) ushr 10) and 0x3FF) + Char.MIN_HIGH_SURROGATE.toInt()
+            val low = ((codePoint - 0x10000) and 0x3FF) + Char.MIN_LOW_SURROGATE.code
+            val high = (((codePoint - 0x10000) ushr 10) and 0x3FF) + Char.MIN_HIGH_SURROGATE.code
             charArrayOf(high.toChar(), low.toChar())
         }
         else -> throw IllegalArgumentException()

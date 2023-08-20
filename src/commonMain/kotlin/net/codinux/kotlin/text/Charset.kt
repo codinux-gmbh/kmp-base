@@ -1,21 +1,23 @@
 package net.codinux.kotlin.text
 
 import net.codinux.kotlin.lang.*
-import kotlin.math.min
 
 // Copied from korlibs/korge: https://github.com/korlibs/korge/blob/main/korio/src/commonMain/kotlin/korlibs/io/lang/Charset.kt
 
-//fun interface CharsetProvider {
-//    operator fun invoke(normalizedName: String, name: String): Charset?
-//}
-//
-//expect val platformCharsetProvider: CharsetProvider
-
-
 abstract class Charset(val name: String) {
+
     // Just an estimation, might not be accurate, but hopefully will help setting StringBuilder and ByteArrayBuilder to a better initial capacity
     open fun estimateNumberOfCharactersForBytes(nbytes: Int): Int = nbytes * 2
     open fun estimateNumberOfBytesForCharacters(nchars: Int): Int = nchars * 2
+
+    /**
+     * Not all Encodings support encoding, e.g.
+     * - on JavaScript only UTF-8 is supported for encodings (see e.g. https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder)
+     * - on JVM for "special-purpose auto-detect charsets whose decoders can determine which of several possible encoding
+     * schemes is in use by examining the input byte sequence. Such charsets do not support encoding because there is
+     * no way to determine which encoding should be used on output."
+     */
+    open val canEncode = true
 
 	abstract fun encode(out: ByteArrayBuilder, src: CharSequence, start: Int = 0, end: Int = src.length)
 
@@ -27,10 +29,12 @@ abstract class Charset(val name: String) {
      **/
     abstract fun decode(out: StringBuilder, src: ByteArray, start: Int = 0, end: Int = src.size): Int
 
+    override fun toString() = name
+
 	companion object {
 
-        fun forName(name: String): Charset {
-            val normalizedName = name.uppercase().replace("_", "").replace("-", "")
+        fun forName(charsetName: String): Charset? {
+            val normalizedName = charsetName.uppercase().replace("_", "").replace("-", "")
             when (normalizedName) {
                 "ASCII", "USASCII" -> return Charsets.US_ASCII
                 "UTF8" -> return Charsets.UTF8
@@ -39,9 +43,8 @@ abstract class Charset(val name: String) {
                 "ISO88591", "LATIN1" -> return Charsets.ISO_8859_1
             }
 
-//            platformCharsetProvider(normalizedName, name)?.let { return it }
-
-            throw IllegalArgumentException("Unknown charset '$name'")
+            return CharsetPlatform.forName(normalizedName)
+                ?: CharsetPlatform.forName(charsetName)
 		}
 
         fun StringBuilder.appendCodePointV(codePoint: Int) {
@@ -59,7 +62,7 @@ abstract class Charset(val name: String) {
         inline fun decodeCodePoints(src: CharSequence, start: Int, end: Int, block: (codePoint: Int) -> Unit) {
             var highSurrogate = 0
             loop@for (n in start until end) {
-                val char = src[n].toInt()
+                val char = src[n].code
                 val codePoint = if (char in 0xD800..0xDFFF) {
                     when (char.extract(10, 6)) {
                         0b110110 -> {
@@ -207,26 +210,26 @@ fun String.toByteArray(charset: Charset = Charsets.UTF8, start: Int = 0, end: In
 	return out.toByteArray()
 }
 
-fun ByteArray.toString(charset: Charset, start: Int = 0, end: Int = this.size): String {
+fun ByteArray.toString(charset: Charset = Charsets.UTF8, start: Int = 0, end: Int = this.size): String {
 	val out = StringBuilder(charset.estimateNumberOfCharactersForBytes(end - start))
 	charset.decode(out, this, start, end)
 	return out.toString()
 }
 
-fun ByteArray.readStringz(o: Int, size: Int, charset: Charset = Charsets.UTF8): String {
-	var idx = o
-	val stop = min(this.size, o + size)
-	while (idx < stop) {
-		if (this[idx] == 0.toByte()) break
-		idx++
-	}
-	return this.copyOfRange(o, idx).toString(charset)
-}
-
-fun ByteArray.readStringz(o: Int, charset: Charset = Charsets.UTF8): String {
-	return readStringz(o, size - o, charset)
-}
-
-fun ByteArray.readString(o: Int, size: Int, charset: Charset = Charsets.UTF8): String {
-	return this.copyOfRange(o, o + size).toString(charset)
-}
+//fun ByteArray.readStringz(offset: Int, size: Int, charset: Charset = Charsets.UTF8): String {
+//	var idx = offset
+//	val stop = min(this.size, offset + size)
+//	while (idx < stop) {
+//		if (this[idx] == 0.toByte()) break
+//		idx++
+//	}
+//	return this.copyOfRange(offset, idx).toString(charset)
+//}
+//
+//fun ByteArray.readStringz(offset: Int, charset: Charset = Charsets.UTF8): String {
+//	return readStringz(offset, size - offset, charset)
+//}
+//
+//fun ByteArray.readString(offset: Int, size: Int, charset: Charset = Charsets.UTF8): String {
+//	return this.copyOfRange(offset, offset + size).toString(charset)
+//}

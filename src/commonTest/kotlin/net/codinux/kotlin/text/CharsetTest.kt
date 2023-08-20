@@ -1,5 +1,6 @@
 package net.codinux.kotlin.text
 
+import io.kotest.matchers.nulls.shouldBeNull
 import net.codinux.kotlin.encoding.unhex
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -64,9 +65,13 @@ class CharsetTest {
                 ISO-8859-1
             """.trimIndent(),
             listOf("ASCII", "US-ASCII", "UTF-8", "UTF-16", "UTF-16-LE", "UTF-16-BE", "LATIN-1", "ISO-8859-1")
-                .joinToString("\n") { Charset.forName(it).name }
+                .joinToString("\n") { Charset.forName(it)!!.name }
         )
-        assertFailsWith<IllegalArgumentException> { Charset.forName("MY-UNKNOWN-CHARSET") }
+    }
+
+    @Test
+    fun testCharsetForName_UnknownCharset() {
+        Charset.forName("MY-UNKNOWN-CHARSET").shouldBeNull()
     }
 
     @Test
