@@ -1,6 +1,5 @@
 package net.codinux.kotlin.text
 
-import net.codinux.kotlin.util.Locale
 import java.text.DecimalFormat
 import java.text.NumberFormat
 

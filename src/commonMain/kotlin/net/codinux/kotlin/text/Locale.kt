@@ -1,4 +1,4 @@
-package net.codinux.kotlin.util
+package net.codinux.kotlin.text
 
 import net.codinux.kotlin.internal.Internal
 
@@ -24,7 +24,13 @@ class Locale(
 
         fun getDefault() = Internal.getSystemLocale()
 
+        fun languageTagFor(locale: Locale) = languageTagFor(locale.language, locale.country)
+
+        fun languageTagFor(language: String, country: String) = "$language-$country"
+
     }
+
+    val languageTag by lazy { languageTagFor(this) }
 
     override fun toString(): String {
         return "$language-$country"

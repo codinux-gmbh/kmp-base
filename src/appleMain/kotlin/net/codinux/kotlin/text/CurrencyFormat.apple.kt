@@ -1,7 +1,5 @@
 package net.codinux.kotlin.text
 
-import net.codinux.kotlin.util.Locale
-
 actual class CurrencyFormat {
 
     actual companion object {

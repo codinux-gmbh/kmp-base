@@ -1,11 +1,9 @@
 package net.codinux.kotlin.text
 
-import kotlinx.cinterop.cstr
 import kotlinx.cinterop.pointed
 import kotlinx.cinterop.toKString
 import kotlinx.cinterop.value
 import net.codinux.kotlin.platform.posix.toChar
-import net.codinux.kotlin.util.Locale
 import platform.posix.LC_ALL
 import platform.posix.LC_MONETARY
 

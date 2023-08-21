@@ -3,7 +3,7 @@ package net.codinux.kotlin.internal
 import net.codinux.collections.toImmutableList
 import net.codinux.kotlin.text.ICU
 import net.codinux.kotlin.util.IntlLocale
-import net.codinux.kotlin.util.Locale
+import net.codinux.kotlin.text.Locale
 import net.codinux.kotlin.util.WeekInfo
 
 actual class Internal {

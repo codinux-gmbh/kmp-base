@@ -1,7 +1,6 @@
 package net.codinux.kotlin.text
 
 import net.codinux.collections.immutableMapOf
-import net.codinux.kotlin.util.Locale
 
 object ICU {
 

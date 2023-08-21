@@ -1,6 +1,6 @@
 package net.codinux.kotlin.internal
 
-import net.codinux.kotlin.util.Locale
+import net.codinux.kotlin.text.Locale
 
 expect class Internal {
 

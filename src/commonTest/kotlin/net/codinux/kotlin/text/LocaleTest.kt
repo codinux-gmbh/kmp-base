@@ -1,4 +1,4 @@
-package net.codinux.kotlin.util
+package net.codinux.kotlin.text
 
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldNotBeEmpty

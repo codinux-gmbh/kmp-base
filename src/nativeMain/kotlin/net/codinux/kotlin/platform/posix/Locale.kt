@@ -1,7 +1,7 @@
 package net.codinux.kotlin.platform.posix
 
 import kotlinx.cinterop.*
-import net.codinux.kotlin.util.Locale
+import net.codinux.kotlin.text.Locale
 import platform.posix.LC_ALL
 
 // see header <locale.h> or <bits/locale.h> respectively (e.g. /user/include/locale.h)

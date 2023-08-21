@@ -1,7 +1,6 @@
 package net.codinux.kotlin.text
 
 import net.codinux.kotlin.util.IntlNumberFormat
-import net.codinux.kotlin.util.Locale
 
 actual class CurrencyFormat(private val currencyFormat: IntlNumberFormat) {
 

@@ -3,7 +3,6 @@ package net.codinux.kotlin.text
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import net.codinux.kotlin.Platform
-import net.codinux.kotlin.util.Locale
 import kotlin.test.Test
 
 class CurrencyFormatTest {

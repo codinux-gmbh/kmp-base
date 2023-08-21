@@ -1,7 +1,7 @@
 package net.codinux.kotlin.internal
 
 import net.codinux.collections.immutableListOf
-import net.codinux.kotlin.util.Locale
+import net.codinux.kotlin.text.Locale
 
 actual class Internal {
 

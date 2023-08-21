@@ -1,6 +1,6 @@
 package net.codinux.kotlin.platform.foundation
 
-import net.codinux.kotlin.util.Locale
+import net.codinux.kotlin.text.Locale
 import platform.Foundation.*
 
 class Locale {
