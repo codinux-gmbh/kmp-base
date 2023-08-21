@@ -1,6 +1,6 @@
 package net.codinux.kotlin.internal
 
-actual class Internal {
+actual class LocalePlatform {
 
     actual companion object {
 

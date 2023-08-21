@@ -2,7 +2,7 @@ package net.codinux.kotlin.internal
 
 import net.codinux.kotlin.text.Locale
 
-expect class Internal {
+expect class LocalePlatform {
 
     companion object {
 

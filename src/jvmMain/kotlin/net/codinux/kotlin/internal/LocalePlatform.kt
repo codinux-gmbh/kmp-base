@@ -4,7 +4,7 @@ import net.codinux.collections.toImmutableList
 import net.codinux.kotlin.text.Locale
 import java.text.DecimalFormat
 
-actual class Internal {
+actual class LocalePlatform {
 
     actual companion object {
 

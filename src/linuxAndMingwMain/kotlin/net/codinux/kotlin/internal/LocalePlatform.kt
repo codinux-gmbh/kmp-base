@@ -3,7 +3,7 @@ package net.codinux.kotlin.internal
 import net.codinux.collections.immutableListOf
 import net.codinux.kotlin.text.Locale
 
-actual class Internal {
+actual class LocalePlatform {
 
     actual companion object {
 

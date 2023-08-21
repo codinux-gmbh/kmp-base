@@ -1,6 +1,6 @@
 package net.codinux.kotlin.text
 
-import net.codinux.kotlin.internal.Internal
+import net.codinux.kotlin.internal.LocalePlatform
 
 class Locale(
     val language: String,
@@ -20,9 +20,9 @@ class Locale(
 
     companion object {
 
-        val AvailableLocales by lazy { Internal.AvailableLocales }
+        val AvailableLocales by lazy { LocalePlatform.AvailableLocales }
 
-        fun getDefault() = Internal.getSystemLocale()
+        fun getDefault() = LocalePlatform.getSystemLocale()
 
         fun languageTagFor(locale: Locale) = languageTagFor(locale.language, locale.country)
 
