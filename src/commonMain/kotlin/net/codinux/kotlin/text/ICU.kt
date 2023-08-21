@@ -1,6 +1,7 @@
 package net.codinux.kotlin.text
 
 import net.codinux.collections.immutableMapOf
+import net.codinux.kotlin.util.Locale
 
 object ICU {
 
@@ -1301,26 +1302,9 @@ object ICU {
         "zu-ZA" to IcuLocale("zu-ZA", "zu", "ZA", "Zulu (South Africa)", "R", "ZAR", "zul", "ZAF", null, null)
     )
 
-    init {
-//        val currencies = availableLocales.map { Currency(it.isoCurrencyCode, it.currencySymbol) }.toSet()
-
-//        currencies.sortedBy { it.isoCurrencyCode }.forEach { currency ->
-//            println(""""${currency.isoCurrencyCode}" to "${currency.currencySymbol}",""")
-//        }
-
-        AvailableLocales.forEach { (languageTag, locale) ->
-//            println(""""${languageTag}" to "${locale.isoCurrencyCode}",""")
-        }
-
-//        val byLanguageTag = availableLocales.associateBy { "${it.language}-${it.country}" }
-//
-//        println("${availableLocales.size} locales, ${byLanguageTag.size} language tags")
-    }
 
     fun currencyIsoCodeForLocale(language: String, country: String): String? =
-        LocaleToCurrencyIsoCode[languageTagFor(language, country)]
-
-    fun languageTagFor(language: String, country: String) = "$language-$country"
+        LocaleToCurrencyIsoCode[Locale.languageTagFor(language, country)]
 
     data class IcuLocale(
         val languageTag: String,
