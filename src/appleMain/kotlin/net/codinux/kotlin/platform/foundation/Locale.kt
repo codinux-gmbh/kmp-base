@@ -7,17 +7,22 @@ class Locale {
 
     companion object {
 
-        actual val availableLocales: List<Locale> =
+        val AvailableLocales: List<Locale> =
             NSLocale.availableLocaleIdentifiers()
-                .filterIsInstance<NSLocale>()
+                .filterIsInstance<String>()
                 .map { mapToUtilLocale(it) }
 
-        fun getDefaultLocale(): Locale =
+        fun getDeviceLocale(): Locale =
             mapToUtilLocale(NSLocale.currentLocale) // this returns the Device language
-        // for App language use: Locale.preferredLanguages[0]
+
+        fun getAppLanguage(): String? =
+            NSLocale.preferredLanguages().firstOrNull() as? String
+                ?: NSBundle.mainBundle().preferredLocalizations().firstOrNull() as? String
+
+        private fun mapToUtilLocale(languageTag: String) = mapToUtilLocale(NSLocale(languageTag))
 
         private fun mapToUtilLocale(locale: NSLocale) =
-            Locale(locale.languageCode, locale.countryCode ?: "", locale.variantCode, variant = locale.scriptCode)
+            Locale(locale.languageCode, locale.countryCode ?: "", locale.scriptCode, locale.variantCode)
     }
 
 }

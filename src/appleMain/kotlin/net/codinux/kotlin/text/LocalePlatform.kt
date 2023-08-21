@@ -5,10 +5,10 @@ actual class LocalePlatform {
     actual companion object {
 
         actual val AvailableLocales: List<Locale> =
-            net.codinux.kotlin.platform.foundation.Locale.availableLocales
+            net.codinux.kotlin.platform.foundation.Locale.AvailableLocales
 
         actual fun getSystemLocale() =
-            net.codinux.kotlin.platform.foundation.Locale.getDefaultLocale()
+            net.codinux.kotlin.platform.foundation.Locale.getDeviceLocale()
 
     }
 
