@@ -1,9 +1,7 @@
-package net.codinux.kotlin.internal
+package net.codinux.kotlin.text
 
 import net.codinux.collections.toImmutableList
-import net.codinux.kotlin.text.ICU
 import net.codinux.kotlin.util.IntlLocale
-import net.codinux.kotlin.text.Locale
 import net.codinux.kotlin.util.WeekInfo
 
 actual class LocalePlatform {

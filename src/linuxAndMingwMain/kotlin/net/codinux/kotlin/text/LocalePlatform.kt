@@ -1,4 +1,4 @@
-package net.codinux.kotlin.internal
+package net.codinux.kotlin.text
 
 import net.codinux.collections.immutableListOf
 import net.codinux.kotlin.text.Locale

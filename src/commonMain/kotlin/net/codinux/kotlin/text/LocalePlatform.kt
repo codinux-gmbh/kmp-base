@@ -1,6 +1,4 @@
-package net.codinux.kotlin.internal
-
-import net.codinux.kotlin.text.Locale
+package net.codinux.kotlin.text
 
 expect class LocalePlatform {
 

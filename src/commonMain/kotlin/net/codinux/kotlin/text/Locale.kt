@@ -1,7 +1,5 @@
 package net.codinux.kotlin.text
 
-import net.codinux.kotlin.internal.LocalePlatform
-
 class Locale(
     val language: String,
     val country: String,

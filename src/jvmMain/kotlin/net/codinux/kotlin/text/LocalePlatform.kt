@@ -1,7 +1,6 @@
-package net.codinux.kotlin.internal
+package net.codinux.kotlin.text
 
 import net.codinux.collections.toImmutableList
-import net.codinux.kotlin.text.Locale
 import java.text.DecimalFormat
 
 actual class LocalePlatform {
