@@ -9,17 +9,10 @@ actual class CurrencyFormat(private val formatter: NSNumberFormatter) {
 
     actual companion object {
 
-        actual fun getForLocale(locale: Locale): CurrencyFormat? {
-            val nsLocale = net.codinux.kotlin.platform.foundation.Locale.nsLocaleFromLanguageTag(locale.languageTag)
-                ?: net.codinux.kotlin.platform.foundation.Locale.nsLocaleFromLanguageTag("${locale.language}_${locale.country}")
-
-            return nsLocale?.let {
-                CurrencyFormat(NSNumberFormatter().apply {
-                    this.numberStyle = NSNumberFormatterCurrencyStyle
-                    this.locale = nsLocale
-                })
+        actual fun getForLocale(locale: Locale, useIsoCode: Boolean): CurrencyFormat? =
+            net.codinux.kotlin.platform.foundation.Locale.nsFormatterForLocale(locale, if (useIsoCode) NSNumberFormatterCurrencyISOCodeStyle else NSNumberFormatterCurrencyStyle)?.let { formatter ->
+                CurrencyFormat(formatter)
             }
-        }
 
     }
 

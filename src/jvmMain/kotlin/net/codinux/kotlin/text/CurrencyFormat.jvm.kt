@@ -1,15 +1,25 @@
 package net.codinux.kotlin.text
 
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 
-actual class CurrencyFormat(private val currencyFormat: DecimalFormat) {
+actual class CurrencyFormat(private val currencyFormat: NumberFormat) {
 
     actual companion object {
-        actual fun getForLocale(locale: Locale): CurrencyFormat? =
+
+        actual fun getForLocale(locale: Locale, useIsoCode: Boolean): CurrencyFormat? =
             LocalePlatform.javaLocaleFromLanguageTag(locale.languageTag)?.let { javaLocale ->
-                (NumberFormat.getCurrencyInstance(javaLocale) as? DecimalFormat)?.let {
-                    CurrencyFormat(it)
+                NumberFormat.getCurrencyInstance(javaLocale)?.let { currencyFormat ->
+                    if (useIsoCode) {
+                        (currencyFormat as? DecimalFormat)?.let {
+                            currencyFormat.decimalFormatSymbols = DecimalFormatSymbols(javaLocale).apply {
+                                this.currencySymbol = currencyFormat.currency.currencyCode
+                            }
+                        }
+                    }
+
+                    CurrencyFormat(currencyFormat)
                 }
             }
     }

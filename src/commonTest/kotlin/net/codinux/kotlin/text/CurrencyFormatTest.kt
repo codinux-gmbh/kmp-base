@@ -51,6 +51,44 @@ class CurrencyFormatTest {
     }
 
     @Test
+    fun format_en_US_isoCode() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val result = CurrencyFormat.getForLocale(Locale("en", "US"), true)
+            ?.format(123.45)
+
+        result
+            ?.replace(" ", "") // JS and Apple systems insert a white space, JVM doesn't
+            .shouldBe("USD123.45")
+    }
+
+    @Test
+    fun format_de_DE_isoCode() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val result = CurrencyFormat.getForLocale(Locale("de", "DE"), true)
+            ?.format(123.45)
+
+        result.shouldBe("123,45 EUR")
+    }
+
+    @Test
+    fun format_de_CH_isoCode() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val result = CurrencyFormat.getForLocale(Locale("de", "CH"), true)
+            ?.format(123.45)
+
+        result.shouldBe("CHF 123.45")
+    }
+
+    @Test
     fun getForLocale_notExistingLocale() {
         val format = CurrencyFormat.getForLocale(Locale("abc", "def"))
 

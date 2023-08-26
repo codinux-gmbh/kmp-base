@@ -11,7 +11,7 @@ actual class CurrencyFormat {
 
     actual companion object {
 
-        actual fun getForLocale(locale: Locale): CurrencyFormat? {
+        actual fun getForLocale(locale: Locale, useIsoCode: Boolean): CurrencyFormat? {
             // TODO: may implement some day:
 
             // there's a POSIX method strfmon() to format currencies, but it's not included in Kotlin Native. For its usage see:

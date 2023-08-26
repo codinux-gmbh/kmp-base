@@ -27,7 +27,19 @@ class Locale {
             NSLocale.preferredLanguages().firstOrNull() as? String
                 ?: NSBundle.mainBundle().preferredLocalizations().firstOrNull() as? String
 
-        fun nsLocaleFromLanguageTag(languageTag: String): NSLocale? =
+        fun nsFormatterForLocale(locale: Locale, style: NSNumberFormatterStyle): NSNumberFormatter? =
+            nsLocaleForLocale(locale)?.let { nsLocale ->
+                NSNumberFormatter().apply {
+                    this.locale = nsLocale
+                    this.numberStyle = style
+                }
+            }
+
+        fun nsLocaleForLocale(locale: Locale): NSLocale? =
+            nsLocaleForLanguageTag(locale.languageTag)
+                ?: nsLocaleForLanguageTag("${locale.language}_${locale.country}")
+
+        fun nsLocaleForLanguageTag(languageTag: String): NSLocale? =
             AvailableNSLocales.firstOrNull { it.localeIdentifier == languageTag }
 
         private fun mapToUtilLocale(locale: NSLocale) =

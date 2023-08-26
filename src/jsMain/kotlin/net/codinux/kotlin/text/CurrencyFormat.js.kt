@@ -6,13 +6,13 @@ actual class CurrencyFormat(private val currencyFormat: IntlNumberFormat) {
 
     actual companion object {
 
-        actual fun getForLocale(locale: Locale): CurrencyFormat? {
+        actual fun getForLocale(locale: Locale, useIsoCode: Boolean): CurrencyFormat? {
             val currencyIsoCode = ICU.LocaleToCurrencyIsoCode[locale.languageTag]
             if (currencyIsoCode == null) {
                 return null
             }
 
-            return eval("Intl.NumberFormat('${locale.languageTag}', { style: 'currency', currency: '$currencyIsoCode' })")
+            return eval("Intl.NumberFormat('${locale.languageTag}', { style: 'currency', currency: '$currencyIsoCode', currencyDisplay: '${if (useIsoCode) "code" else "symbol"}' })")
                 .unsafeCast<IntlNumberFormat?>()
                 ?.let { CurrencyFormat(it) }
         }
