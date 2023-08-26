@@ -10,9 +10,11 @@ actual class LocalePlatform {
 
         // JavaScript has no method to get all supported Locales. But as it uses ICU, we can iterate over all
         // Locales from ICU to find all JS Intl.Locale instances
-        actual val AvailableLocales: List<Locale> = ICU.AvailableLocales.mapNotNull { (languageTag, _) ->
-            getLocaleForLanguageTag(languageTag)
-        }.toImmutableList()
+        actual val AvailableLocales: List<Locale> by lazy {
+            ICU.AvailableLocales.mapNotNull { (languageTag, _) ->
+                getLocaleForLanguageTag(languageTag)
+            }.toImmutableList()
+        }
 
         actual fun getSystemLocale(): Locale {
             val localeString = js("Intl.NumberFormat().resolvedOptions().locale")
@@ -20,14 +22,16 @@ actual class LocalePlatform {
             return getLocaleForLanguageTag(localeString)!!
         }
 
-        private fun getLocaleForLanguageTag(languageTag: String): Locale? {
-            try {
-                eval("new Intl.Locale(\"$languageTag\")").unsafeCast<IntlLocale?>()?.let { locale ->
-                    return Locale(locale.language, locale.region, locale.script)
-                }
-            } catch (ignored: Exception) { }
+        private fun getIntlLocaleForLanguageTag(languageTag: String): IntlLocale? {
+            return try {
+                eval("new Intl.Locale(\"$languageTag\")").unsafeCast<IntlLocale?>()
+            } catch (ignored: Exception) {
+                null
+            }
+        }
 
-            return null
+        private fun getLocaleForLanguageTag(languageTag: String) = getIntlLocaleForLanguageTag(languageTag)?.let { locale ->
+            Locale(locale.language, locale.region, locale.script)
         }
 
         private fun formatCurrency(locale: IntlLocale) {

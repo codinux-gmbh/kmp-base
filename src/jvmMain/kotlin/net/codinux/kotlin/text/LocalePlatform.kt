@@ -7,15 +7,22 @@ actual class LocalePlatform {
 
     actual companion object {
 
-        actual val AvailableLocales: List<Locale> = java.util.Locale.getAvailableLocales()
-            .map { mapLocale(it) }
-            .toImmutableList()
+        private val AvailableJavaLocales by lazy { java.util.Locale.getAvailableLocales() }
+
+        actual val AvailableLocales: List<Locale> by lazy {
+            AvailableJavaLocales
+                .map { mapLocale(it) }
+                .toImmutableList()
+        }
 
         actual fun getSystemLocale(): Locale {
             val jvmLocale = java.util.Locale.getDefault()
 
             return mapLocale(jvmLocale)
         }
+
+        fun javaLocaleFromLanguageTag(languageTag: String): java.util.Locale? =
+            AvailableJavaLocales.firstOrNull { it.toLanguageTag() == languageTag }
 
         private fun mapLocale(jvmLocale: java.util.Locale) = Locale(
             jvmLocale.language,

@@ -50,4 +50,11 @@ class CurrencyFormatTest {
         result.shouldBe("CHF 123.45")
     }
 
+    @Test
+    fun getForLocale_notExistingLocale() {
+        val format = CurrencyFormat.getForLocale(Locale("abc", "def"))
+
+        format.shouldBeNull()
+    }
+
 }

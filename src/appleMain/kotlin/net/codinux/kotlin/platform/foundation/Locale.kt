@@ -1,5 +1,6 @@
 package net.codinux.kotlin.platform.foundation
 
+import net.codinux.collections.toImmutableList
 import net.codinux.kotlin.text.Locale
 import platform.Foundation.*
 
@@ -7,12 +8,17 @@ class Locale {
 
     companion object {
 
-        val AvailableNSLocales = NSLocale.availableLocaleIdentifiers()
-            .filterIsInstance<String>()
-            .map { NSLocale(it) }
+        private val AvailableNSLocales by lazy {
+            NSLocale.availableLocaleIdentifiers()
+                .filterIsInstance<String>()
+                .map { NSLocale(it) }
+        }
 
-        val AvailableLocales: List<Locale> = AvailableNSLocales
+        val AvailableLocales: List<Locale> by lazy {
+            AvailableNSLocales
                 .map { mapToUtilLocale(it) }
+                .toImmutableList()
+        }
 
         fun getDeviceLocale(): Locale =
             mapToUtilLocale(NSLocale.currentLocale) // this returns the Device language
