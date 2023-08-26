@@ -1,5 +1,6 @@
 package net.codinux.kotlin.text
 
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import net.codinux.kotlin.Platform
@@ -9,7 +10,7 @@ class CurrencyFormatTest {
 
     @Test
     fun format_en_US() {
-        if (Platform.type.isNative) {
+        if (Platform.type.isLinuxOrMingw) {
             return
         }
 
@@ -23,7 +24,7 @@ class CurrencyFormatTest {
 
     @Test
     fun format_de_DE() {
-        if (Platform.type.isNative) {
+        if (Platform.type.isLinuxOrMingw) {
             return
         }
 
@@ -37,7 +38,7 @@ class CurrencyFormatTest {
 
     @Test
     fun format_de_CH() {
-        if (Platform.type.isNative) {
+        if (Platform.type.isLinuxOrMingw) {
             return
         }
 

@@ -1,23 +1,30 @@
+@file:OptIn(UnsafeNumber::class)
+
 package net.codinux.kotlin.text
 
-actual class CurrencyFormat {
+import kotlinx.cinterop.UnsafeNumber
+import platform.Foundation.*
+
+actual class CurrencyFormat(private val formatter: NSNumberFormatter) {
 
     actual companion object {
 
         actual fun getForLocale(locale: Locale): CurrencyFormat? {
-            // here's an example how to format a NSNumber as currency:
-            // let formatter = NumberFormatter()
-            // formatter.numberStyle = .currency
-            // // formatter.locale = NSLocale.current
-            // formatter.string(from: price) // "$123.44"
+            val nsLocale = net.codinux.kotlin.platform.foundation.Locale.nsLocaleFromLanguageTag(locale.languageTag)
+                ?: net.codinux.kotlin.platform.foundation.Locale.nsLocaleFromLanguageTag("${locale.language}_${locale.country}")
 
-            // for all options see: https://developer.apple.com/documentation/foundation/numberformatter
-
-            return null
+            return nsLocale?.let {
+                CurrencyFormat(NSNumberFormatter().apply {
+                    this.numberStyle = NSNumberFormatterCurrencyStyle
+                    this.locale = nsLocale
+                })
+            }
         }
 
     }
 
-    actual fun format(currencyValue: Double): String? = null
+    actual fun format(currencyValue: Double): String? =
+        formatter.stringFromNumber(NSNumber.numberWithDouble(currencyValue))
+            ?.replace(' ', ' ') // Apple system uses non-breaking space as white space separator -> normalize to make equal to other platforms
 
 }
