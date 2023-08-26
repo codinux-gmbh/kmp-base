@@ -25,6 +25,8 @@ enum class PlatformType {
 
     val isNative by lazy { this == Linux || this == Windows || isDarwin }
 
+    val isLinuxOrMingw by lazy { this == Linux || this == Windows}
+
     val isDarwin by lazy { DarwinPlatforms.contains(this) }
 
     /**

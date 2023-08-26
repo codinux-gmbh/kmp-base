@@ -4,6 +4,7 @@ import io.kotest.matchers.collections.shouldHaveAtLeastSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import net.codinux.collections.immutableListOf
 import net.codinux.kotlin.Platform
+import net.codinux.kotlin.PlatformType
 import net.codinux.kotlin.collections.containsNot
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,7 +13,7 @@ class CharsetPlatformTest {
 
     companion object {
         private val CharsetsNotSupportingAscii = immutableListOf(
-            "JIS_X0212-1990", "x-COMPOUND_TEXT", "x-IBM300", "x-IBM834", "x-JIS0208", "x-MacDingbat", "x-MacSymbol"
+            "JIS_X0212-1990", "x-COMPOUND_TEXT", "x-IBM300", "x-IBM834", "x-JIS0208", "Mac OS", "x-MacDingbat", "x-MacSymbol"
         )
 
         private val icu4jCharsets = immutableListOf(
@@ -306,10 +307,14 @@ class CharsetPlatformTest {
 
     @Test
     fun availableCharsets() {
-        if (Platform.type.isJvmOrAndroid || Platform.type.isJavaScript) {
+        if (Platform.type.isLinuxOrMingw == false) {
             val availableCharsets = CharsetPlatform.availableCharsets
 
-            availableCharsets.entries.shouldHaveAtLeastSize(20)
+            if (Platform.type.isAppleOS && Platform.type != PlatformType.MacOS) {
+                availableCharsets.entries.shouldHaveAtLeastSize(9) // iOS, watchOS and tvOS have only 9 charsets
+            } else {
+                availableCharsets.entries.shouldHaveAtLeastSize(22)
+            }
         }
     }
 
@@ -335,7 +340,7 @@ class CharsetPlatformTest {
                     val encoded = testString.toByteArray(charset)
                     val decoded = encoded.toString(charset)
 
-                    assertEquals(testString, decoded)
+                    assertEquals(testString, decoded, "Charset '${charset.name}' should be able to encode and decode ASCII characters")
                 }
             } else { // Charsets ISO-2022-CN and x-JISAutoDetect cannot encode
                 println("Charset ${charset.name} cannot encode")
