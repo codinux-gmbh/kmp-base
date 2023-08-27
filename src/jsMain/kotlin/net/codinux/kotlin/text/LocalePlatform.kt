@@ -1,7 +1,9 @@
 package net.codinux.kotlin.text
 
 import net.codinux.collections.toImmutableList
+import net.codinux.collections.toImmutableMap
 import net.codinux.kotlin.util.IntlLocale
+import net.codinux.kotlin.util.IntlNumberFormat
 import net.codinux.kotlin.util.WeekInfo
 
 actual class LocalePlatform {
@@ -10,9 +12,17 @@ actual class LocalePlatform {
 
         // JavaScript has no method to get all supported Locales. But as it uses ICU, we can iterate over all
         // Locales from ICU to find all JS Intl.Locale instances
+        private val AvailableIntlLocales: Map<String, IntlLocale> by lazy {
+            ICU.AvailableLocales
+                .map { (languageTag, _) -> languageTag}
+                .associateWith { getIntlLocaleForLanguageTag(it) }
+                .filterValues { it != null }
+                .toImmutableMap() as Map<String, IntlLocale>
+        }
+
         actual val AvailableLocales: List<Locale> by lazy {
-            ICU.AvailableLocales.mapNotNull { (languageTag, _) ->
-                getLocaleForLanguageTag(languageTag)
+            AvailableIntlLocales.map { (_, intlLocale) ->
+                getLocaleForIntLocale(intlLocale)
             }.toImmutableList()
         }
 
@@ -25,7 +35,7 @@ actual class LocalePlatform {
         private fun getIntlLocaleForLanguageTag(languageTag: String): IntlLocale? {
             return try {
                 eval("new Intl.Locale(\"$languageTag\")").unsafeCast<IntlLocale?>()
-            } catch (ignored: Exception) {
+            } catch (ignored: Throwable) {
                 null
             }
         }
@@ -33,6 +43,17 @@ actual class LocalePlatform {
         private fun getLocaleForLanguageTag(languageTag: String) = getIntlLocaleForLanguageTag(languageTag)?.let { locale ->
             Locale(locale.language, locale.region, locale.script)
         }
+
+        private fun getLocaleForIntLocale(locale: IntlLocale) =
+            Locale(locale.language, locale.region, locale.script)
+
+        fun getIntlNumberFormatForLocale(locale: Locale, options: String): IntlNumberFormat? =
+            try {
+                eval("Intl.NumberFormat('${locale.languageTag}', { $options })")
+                    .unsafeCast<IntlNumberFormat?>()
+            } catch (ignored: Throwable) {
+                null
+            }
 
         private fun formatCurrency(locale: IntlLocale) {
             // val options = IntlNumberFormatOptions()
