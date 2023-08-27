@@ -3,6 +3,7 @@
 package net.codinux.kotlin.text
 
 import kotlinx.cinterop.UnsafeNumber
+import net.codinux.kotlin.platform.foundation.toNSNumber
 import platform.Foundation.*
 
 actual class CurrencyFormat(private val formatter: NSNumberFormatter) {
@@ -17,7 +18,7 @@ actual class CurrencyFormat(private val formatter: NSNumberFormatter) {
     }
 
     actual fun format(currencyValue: Double): String? =
-        formatter.stringFromNumber(NSNumber.numberWithDouble(currencyValue))
+        formatter.stringFromNumber(currencyValue.toNSNumber())
             ?.replace(' ', ' ') // Apple system uses non-breaking space as white space separator -> normalize to make equal to other platforms
 
 }

@@ -7,10 +7,12 @@ import platform.Foundation.*
 import platform.darwin.NSUInteger
 
 
-@Suppress("CAST_NEVER_SUCCEEDS")
-fun Int.toNSUInteger(): NSUInteger = this.toULong() as NSUInteger
-@Suppress("CAST_NEVER_SUCCEEDS")
-fun Long.toNSUInteger(): NSUInteger = this.toULong() as NSUInteger
+fun Int.toNSNumber() = NSNumber.numberWithInt(this)
+fun Long.toNSNumber() = NSNumber.numberWithLongLong(this)
+fun Double.toNSNumber() = NSNumber.numberWithDouble(this)
+
+fun Int.toNSUInteger(): NSUInteger = this.toNSNumber().unsignedIntegerValue
+fun Long.toNSUInteger(): NSUInteger = this.toNSNumber().unsignedIntegerValue
 
 fun <T> NSArray.toList(): List<T> {
     val result = mutableListOf<T>()

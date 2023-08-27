@@ -3,6 +3,7 @@
 package net.codinux.kotlin.text
 
 import kotlinx.cinterop.UnsafeNumber
+import net.codinux.kotlin.platform.foundation.toNSNumber
 import platform.Foundation.*
 
 actual class IntFormat(private val formatter: NSNumberFormatter) {
@@ -19,6 +20,6 @@ actual class IntFormat(private val formatter: NSNumberFormatter) {
     }
 
     actual fun format(value: Int): String? =
-        formatter.stringFromNumber(NSNumber.numberWithInt(value))
+        formatter.stringFromNumber(value.toNSNumber())
 
 }

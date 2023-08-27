@@ -3,6 +3,7 @@
 package net.codinux.kotlin.text
 
 import kotlinx.cinterop.UnsafeNumber
+import net.codinux.kotlin.platform.foundation.toNSNumber
 import net.codinux.kotlin.platform.foundation.toNSUInteger
 import platform.Foundation.*
 
@@ -32,6 +33,6 @@ actual class DecimalFormat(private val formatter: NSNumberFormatter) {
     }
 
     actual fun format(value: Double): String? =
-        formatter.stringFromNumber(NSNumber.numberWithDouble(value))
+        formatter.stringFromNumber(value.toNSNumber())
 
 }
