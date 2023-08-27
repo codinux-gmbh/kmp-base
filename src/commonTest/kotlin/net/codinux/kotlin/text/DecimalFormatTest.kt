@@ -57,4 +57,83 @@ class DecimalFormatTest {
         format.shouldBeNull()
     }
 
+
+    @Test
+    fun minimumIntegerDigits() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val format = DecimalFormat.getForLocale(Locale("en", "US"), NumberFormat(minimumIntegerDigits = 7))!!
+
+        val result = format.format(1234.0)
+
+        result.shouldBe("0,001,234")
+    }
+
+    @Test
+    fun maximumIntegerDigits() {
+        if (Platform.type.isLinuxOrMingw || Platform.type.isJavaScript) {
+            return
+        }
+
+        val format = DecimalFormat.getForLocale(Locale("en", "US"), NumberFormat(maximumIntegerDigits = 2))!!
+
+        val result = format.format(1234.0)
+
+        result.shouldBe("34")
+    }
+
+    @Test
+    fun minimumFractionDigits() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val format = DecimalFormat.getForLocale(Locale("en", "US"), NumberFormat(minimumFractionDigits = 4))!!
+
+        val result = format.format(12.34)
+
+        result.shouldBe("12.3400")
+    }
+
+    @Test
+    fun maximumFractionDigits() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val format = DecimalFormat.getForLocale(Locale("en", "US"), NumberFormat(maximumFractionDigits = 2))!!
+
+        val result = format.format(1.234567)
+
+        result.shouldBe("1.23")
+    }
+
+    @Test
+    fun useGrouping_True() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val format = DecimalFormat.getForLocale(Locale("en", "US"), NumberFormat(useGrouping = true))!!
+
+        val result = format.format(1234567.0)
+
+        result.shouldBe("1,234,567")
+    }
+
+    @Test
+    fun useGrouping_False() {
+        if (Platform.type.isLinuxOrMingw) {
+            return
+        }
+
+        val format = DecimalFormat.getForLocale(Locale("en", "US"), NumberFormat(useGrouping = false))!!
+
+        val result = format.format(1234567.0)
+
+        result.shouldBe("1234567")
+    }
+
 }

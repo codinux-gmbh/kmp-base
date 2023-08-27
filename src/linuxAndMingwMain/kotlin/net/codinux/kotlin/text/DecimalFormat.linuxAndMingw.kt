@@ -4,7 +4,7 @@ actual class DecimalFormat {
 
     actual companion object {
 
-        actual fun getForLocale(locale: Locale): DecimalFormat? = null
+        actual fun getForLocale(locale: Locale, format: NumberFormat?): DecimalFormat? = null
 
     }
 

@@ -11,7 +11,9 @@ actual class IntFormat(private val formatter: NSNumberFormatter) {
 
         actual fun getForLocale(locale: Locale): IntFormat? =
             net.codinux.kotlin.platform.foundation.Locale.nsFormatterForLocale(locale, NSNumberFormatterNoStyle)?.let { formatter ->
-                IntFormat(formatter)
+                IntFormat(formatter.apply {
+                    this.generatesDecimalNumbers = false
+                })
             }
 
     }

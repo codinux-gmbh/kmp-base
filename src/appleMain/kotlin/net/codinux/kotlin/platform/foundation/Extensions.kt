@@ -4,14 +4,20 @@ package net.codinux.kotlin.platform.foundation
 
 import kotlinx.cinterop.*
 import platform.Foundation.*
+import platform.darwin.NSUInteger
 
+
+@Suppress("CAST_NEVER_SUCCEEDS")
+fun Int.toNSUInteger(): NSUInteger = this.toULong() as NSUInteger
+@Suppress("CAST_NEVER_SUCCEEDS")
+fun Long.toNSUInteger(): NSUInteger = this.toULong() as NSUInteger
 
 fun <T> NSArray.toList(): List<T> {
     val result = mutableListOf<T>()
 
     for (i in 0L until this.count.toLong()) {
         @Suppress("UNCHECKED_CAST")
-        result.add(this.objectAtIndex(i.toULong()) as T)
+        result.add(this.objectAtIndex(i.toNSUInteger()) as T)
     }
 
     return result
