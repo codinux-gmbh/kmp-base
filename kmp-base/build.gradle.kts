@@ -87,6 +87,7 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
 
+    val assertKVersion: String by project
 
     sourceSets {
         commonMain.dependencies {
@@ -94,6 +95,8 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+
+            implementation("com.willowtreeapps.assertk:assertk:$assertKVersion")
         }
 
 
