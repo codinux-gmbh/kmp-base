@@ -10,7 +10,7 @@ actual object Platform {
     actual val fileSeparator = ApplePlatform.fileSeparator
 
 
-    actual val osName = ApplePlatform.osName
+    actual val osName = "iOS"
 
     actual val osVersion = ApplePlatform.osVersion
 
