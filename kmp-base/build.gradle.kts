@@ -95,6 +95,37 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
+
+
+        val javaCommonMain by creating {
+            dependsOn(commonMain.get())
+        }
+
+        val javaCommonTest by creating {
+            dependsOn(commonTest.get())
+        }
+
+        val jvmMain by getting {
+            dependsOn(javaCommonMain)
+        }
+        val jvmTest by getting {
+            dependsOn(javaCommonTest)
+        }
+
+        val androidMain by getting {
+            dependsOn(javaCommonMain)
+        }
+        val androidUnitTest by getting {
+            dependsOn(javaCommonTest)
+        }
+
+
+//        val nonJvmMain by creating {
+//            dependsOn(commonMain.get())
+//        }
+//        nativeMain {
+//            dependsOn(nonJvmMain)
+//        }
     }
 }
 
