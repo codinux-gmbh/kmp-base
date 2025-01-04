@@ -4,6 +4,7 @@ pluginManagement {
     repositories {
         mavenCentral()
         gradlePluginPortal()
+        google()
     }
 
     plugins {
@@ -23,3 +24,5 @@ plugins {
 
 
 rootProject.name = "kmp-base-project"
+
+include("kmp-base")

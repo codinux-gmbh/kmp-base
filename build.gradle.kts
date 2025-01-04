@@ -1,3 +1,19 @@
+buildscript {
+    val kotlinVersion: String by extra
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        google()
+    }
+
+    dependencies {
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+
+        classpath("com.android.tools.build:gradle:8.5.2")
+    }
+}
+
 
 allprojects {
     group = "net.codinux.codinux"
@@ -9,5 +25,6 @@ allprojects {
 
     repositories {
         mavenCentral()
+        google()
     }
 }
