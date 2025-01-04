@@ -157,3 +157,7 @@ android {
         this.checkReleaseBuilds = false
     }
 }
+
+
+
+apply(from = "../gradle/scripts/publish-codinux.gradle.kts")
