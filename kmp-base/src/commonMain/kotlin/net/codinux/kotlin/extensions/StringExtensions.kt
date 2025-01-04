@@ -47,6 +47,11 @@ fun String.substringAfterLastOrNull(delimiter: String): String? = if (this.conta
 fun String.substringBeforeLastOrNull(delimiter: String): String? = if (this.contains(delimiter)) this.substringBeforeLast(delimiter) else null
 
 
+inline fun String.toBase64(startIndex: Int = 0, endIndex: Int = this.length) = this.encodeToByteArray(startIndex, endIndex).toBase64()
+
+inline fun CharSequence.decodeBase64(startIndex: Int = 0, endIndex: Int = this.length): String = this.decodeBase64ToByteArray(startIndex, endIndex).decodeToString()
+
+
 fun String.countOccurrences(char: Char, startIndex: Int = 0, ignoreCase: Boolean = false): Int {
     var count = 0
     var nextIndex = this.indexOfOrNull(char, startIndex, ignoreCase)
