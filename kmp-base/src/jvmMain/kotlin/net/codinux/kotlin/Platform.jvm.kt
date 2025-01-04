@@ -1,17 +1,15 @@
 package net.codinux.kotlin
 
-import java.io.File
-
 actual object Platform {
 
     actual val type = PlatformType.JVM
 
 
-    val lineSeparator = System.lineSeparator()
+    actual val lineSeparator = JavaPlatform.lineSeparator
 
-    val fileSeparator = File.separatorChar
+    actual val fileSeparator = JavaPlatform.fileSeparator
 
-    val pathSeparator = File.pathSeparatorChar
+    val pathSeparator = JavaPlatform.pathSeparator
 
 
     actual val osName = System.getProperty("os.name") ?: "Unknown" // what about "java.vm.vendor" or "java.vendor" (both "Arch Linux" on my machine)

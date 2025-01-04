@@ -11,6 +11,14 @@ actual object Platform {
 
     val os = if (isRunningInBrowser) null else js("require('os')")
 
+
+    // For JavaScript targets (both Browser and Wasm), file system-related concepts don’t exist natively, but you can use default Unix-like conventions (\n and /)
+
+    actual val lineSeparator: String = if (isRunningInBrowser) "\n" else os.EOL
+
+    actual val fileSeparator: String = "/" // Node.js uses "/" even on Windows for path APIs
+
+
     actual val osName: String = if (isRunningInBrowser) window.navigator.platform ?: "Unknown" else os?.type() as String
 
     actual val osVersion: String = if (isRunningInBrowser) window.navigator.userAgent else os?.release() as String // JS doesn't provide detailed OS version

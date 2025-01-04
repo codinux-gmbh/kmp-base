@@ -7,6 +7,11 @@ actual object Platform {
     actual val type = PlatformType.Android
 
 
+    actual val lineSeparator = JavaPlatform.lineSeparator
+
+    actual val fileSeparator = JavaPlatform.fileSeparator
+
+
     actual val osName: String = "Android"
 
     actual val osVersion: String = "${Build.VERSION.SDK_INT} (${Build.VERSION.RELEASE})"

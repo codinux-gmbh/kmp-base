@@ -9,6 +9,11 @@ actual object Platform {
     actual val type = PlatformType.Linux
 
 
+    actual val lineSeparator: String = "\n"
+
+    actual val fileSeparator: String = "/"
+
+
     private var sysname: String = "Linux"
 
     val utsName = memScoped {

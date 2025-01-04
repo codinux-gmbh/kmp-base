@@ -9,6 +9,11 @@ actual object Platform {
     actual val type = PlatformType.Windows
 
 
+    actual val lineSeparator: String = "\r\n"
+
+    actual val fileSeparator: String = "\\"
+
+
     val osInfo = memScoped {
         alloc<_OSVERSIONINFOW>().apply {
             dwOSVersionInfoSize = sizeOf<OSVERSIONINFOEXW>().toUInt()
