@@ -2,8 +2,10 @@ package net.codinux.kotlin
 
 import kotlinx.cinterop.*
 import platform.windows.*
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.Platform
 
-@OptIn(ExperimentalForeignApi::class)
+@OptIn(ExperimentalForeignApi::class, ExperimentalNativeApi::class)
 actual object Platform {
 
     actual val type = PlatformType.Windows
@@ -30,6 +32,6 @@ actual object Platform {
 
     actual val osVersion: String = "${osInfo.dwMajorVersion}.${osInfo.dwMinorVersion} (Build ${osInfo.dwBuildNumber})"
 
-    actual val cpuArchitecture: String? = null
+    actual val cpuArchitecture: String? = Platform.cpuArchitecture.name.lowercase()
 
 }
