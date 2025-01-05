@@ -19,19 +19,11 @@ actual object Platform {
     actual val fileSeparator: String = "/" // Node.js uses "/" even on Windows for path APIs
 
 
-    actual val osName: String = if (isRunningInBrowser) window.navigator.platform ?: "Unknown" else os?.type() as String
+    // TODO: for browser (and wasmJS) split 'Linux x86_64' into osName and CPU arch
+    actual val osName: String = if (isRunningInBrowser) window.navigator.platform else os?.type() as String
 
     actual val osVersion: String = if (isRunningInBrowser) window.navigator.userAgent else os?.release() as String // JS doesn't provide detailed OS version
 
     actual val cpuArchitecture: String? = if (isRunningInBrowser) null else os.arch() as String
-
-
-    init {
-        if (isRunningInBrowser) {
-            println("app = ${window.navigator.appName}, ${window.navigator.appCodeName}, ${window.navigator.appVersion}, " +
-                    "product = ${window.navigator.product}, vendor = ${window.navigator.vendor} ${window.navigator.vendorSub}, " +
-                    "lang = ${window.navigator.language}, ${window.navigator.oscpu}")
-        }
-    }
 
 }

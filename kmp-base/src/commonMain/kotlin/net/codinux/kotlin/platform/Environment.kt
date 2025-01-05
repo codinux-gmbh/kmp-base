@@ -1,6 +1,9 @@
 package net.codinux.kotlin.platform
 
-open class Environment(open val variables: Map<String, String> = PlatformEnvironment.getEnvironmentVariables()) {
+open class Environment(
+    open val variables: Map<String, String> = PlatformEnvironment.getEnvironmentVariables(),
+    open val isRunningTests: Boolean = PlatformEnvironment.isRunningTests
+) {
 
     open val variableNames: Set<String>
         get() = variables.keys

@@ -5,6 +5,9 @@ import platform.posix.*
 
 internal actual object PlatformEnvironment {
 
+    actual val isRunningTests = false // don't know how to get this in native mode
+
+
     @OptIn(ExperimentalForeignApi::class)
     actual fun getEnvironmentVariables(): Map<String, String> {
         val environmentVariables = mutableMapOf<String, String>()

@@ -31,7 +31,9 @@ actual object Platform {
     // utsName.version = Current version level of this release, returned the date time of the build on my machine
     actual val osVersion: String = utsName.release.toKString() // Current release level of this implementation.
 
+    // utsName.machine == "x86_64", Platform.cpuArchitecture = "X64"
     actual val cpuArchitecture: String? = utsName.machine.toKString() // Name of the hardware type on which the system is running.
+        //?: Platform.cpuArchitecture.name.lowercase()
 
     val hostName: String = utsName.nodename.toKString() // Name of this node within the communications network to which this node is attached, if any.
 
