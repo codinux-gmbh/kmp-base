@@ -2,10 +2,14 @@ package net.codinux.kotlin.platform
 
 import kotlinx.cinterop.*
 import platform.windows.*
+import kotlin.experimental.ExperimentalNativeApi
 
+@OptIn(ExperimentalNativeApi::class)
 internal actual object PlatformEnvironment {
 
     actual val isRunningTests = false // don't know how to get this in native mode
+
+    actual val isRunningInDebugMode = Platform.isDebugBinary
 
 
     @OptIn(ExperimentalForeignApi::class)

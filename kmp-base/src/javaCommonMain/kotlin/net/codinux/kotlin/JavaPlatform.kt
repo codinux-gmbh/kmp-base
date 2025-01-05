@@ -10,4 +10,17 @@ internal object JavaPlatform {
 
     val pathSeparator = File.pathSeparatorChar
 
+
+    val isRunningOnAndroid by lazy { isClassAvailable("android.content.Context") }
+
+    fun isClassAvailable(qualifiedClassName: String): Boolean =
+        getClassOrNull(qualifiedClassName) != null
+
+    fun getClassOrNull(qualifiedClassName: String): Class<*>? =
+        try {
+            Class.forName(qualifiedClassName)
+        } catch (ignored: Exception) {
+            null
+        }
+
 }

@@ -9,6 +9,17 @@ internal actual object PlatformEnvironment {
         js("globalThis.__karma__ !== 'undefined' || globalThis.mocha !== 'undefined' || globalThis.Mocha !== 'undefined' || globalThis.kotlinTest !== 'undefined'")
     }
 
+    actual val isRunningInDebugMode: Boolean by lazy {
+        if (Platform.isRunningInBrowser) {
+            // TODO: haven't found any way to determine this for JS Browser
+            false
+        } else {
+            console.log("process.features.debug", js("""typeof process !== 'undefined' && process.features && process.features.debug""")) // TODO: remove again
+
+            js("""typeof process !== 'undefined' && process.features && process.features.debug === true""") // TODO: process.features.debug is always false, even when debugging
+        }
+    }
+
 
     actual fun getEnvironmentVariables(): Map<String, String> =
         if (Platform.isRunningInBrowser) {

@@ -7,6 +7,8 @@ internal actual object PlatformEnvironment {
 
     actual val isRunningTests by lazy { isRunningInTests() }
 
+    actual val isRunningInDebugMode = false
+
 
     // browsers are sandboxed, they have no access to system's environment variables
     actual fun getEnvironmentVariables(): Map<String, String> = emptyMap()
