@@ -36,6 +36,36 @@ fun CharSequence.lastIndexOfOrNull(string: String, startIndex: Int = lastIndex, 
     this.lastIndexOf(string, startIndex, ignoreCase).takeIf { it != -1 }
 
 
+/**
+ * Finds all indices of [string] in this CharSequence
+ */
+fun CharSequence.allIndicesOf(string: String): List<Int> {
+    val indices = mutableListOf<Int>()
+    var index = -1
+
+    do {
+        index = this.indexOf(string, index + 1)
+
+        if (index > -1) {
+            indices.add(index)
+        }
+    } while (index > -1)
+
+    return indices
+}
+
+/**
+ * Trims this string to a max length of [maxLength]. Returns original String if it's length < [maxLength].
+ */
+fun String.ofMaxLength(maxLength: Int): String {
+    if(this.length > maxLength && maxLength > 0) {
+        return this.substring(0, maxLength)
+    }
+
+    return this
+}
+
+
 fun String.substringAfterOrNull(delimiter: Char): String? = if (this.contains(delimiter)) this.substringAfter(delimiter) else null
 fun String.substringBeforeOrNull(delimiter: Char): String? = if (this.contains(delimiter)) this.substringBefore(delimiter) else null
 fun String.substringAfterLastOrNull(delimiter: Char): String? = if (this.contains(delimiter)) this.substringAfterLast(delimiter) else null
