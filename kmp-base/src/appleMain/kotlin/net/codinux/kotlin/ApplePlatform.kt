@@ -1,8 +1,10 @@
 package net.codinux.kotlin
 
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSProcessInfo
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.Platform
 
+@OptIn(ExperimentalNativeApi::class)
 internal object ApplePlatform {
 
     val lineSeparator: String = "\n"
@@ -12,15 +14,13 @@ internal object ApplePlatform {
 
     private val processInfo = NSProcessInfo.processInfo
 
-    /**
-     * Returns only "NSMACHOperatingSystem", no matter if being called for macOS, iOS, ..., so don't use it
-     */
-    val osName: String = processInfo.operatingSystemName()
+    // processInfo.operatingSystemName() returns only "NSMACHOperatingSystem", no matter if being called for
+    // macOS, iOS, ..., so we cannot rely on it
+    val osName: String = Platform.osFamily.name
 
     val osVersion: String = processInfo.operatingSystemVersionString
 
-    @OptIn(ExperimentalForeignApi::class)
-    val cpuArchitecture: String? = null // platform.posix.uname().machine
+    val cpuArchitecture: String? = Platform.cpuArchitecture.name.lowercase()
 
 
     val userName = processInfo.environment["USER"]
