@@ -87,6 +87,8 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
 
+    val jacksonVersion: String by project
+
     val assertKVersion: String by project
 
     sourceSets {
@@ -102,6 +104,10 @@ kotlin {
 
         val javaCommonMain by creating {
             dependsOn(commonMain.get())
+
+            dependencies {
+                compileOnly("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion")
+            }
         }
 
         val javaCommonTest by creating {
