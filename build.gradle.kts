@@ -17,7 +17,7 @@ buildscript {
 
 allprojects {
     group = "net.codinux.kotlin"
-    version = "1.1.0"
+    version = "1.1.1-SNAPSHOT"
 
     ext["sourceCodeRepositoryBaseUrl"] = "github.com/codinux-gmbh/kmp-base"
 
