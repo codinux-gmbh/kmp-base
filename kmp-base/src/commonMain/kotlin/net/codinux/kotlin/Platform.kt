@@ -24,8 +24,14 @@ expect object Platform {
 
 private val DarwinPlatforms by lazy { setOf(macOS, iOS, tvOS, watchOS) }
 
+val Platform.isJvm: Boolean
+    get() = this.type == PlatformType.JVM
+
+val Platform.isAndroid: Boolean
+    get() = this.type == PlatformType.Android
+
 val Platform.isJvmOrAndroid
-    get() = type == JVM || type == Android
+    get() = isJvm || isAndroid
 
 val isJavaScript
     get() = type == JavaScriptBrowser || type == JavaScriptNodeJS
@@ -44,3 +50,6 @@ val isDarwin
  */
 val isAppleOS
     get() = isDarwin
+
+val Platform.isIOS: Boolean
+    get() = this.type == PlatformType.iOS
