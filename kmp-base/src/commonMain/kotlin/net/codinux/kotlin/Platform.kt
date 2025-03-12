@@ -1,6 +1,5 @@
 package net.codinux.kotlin
 
-import net.codinux.kotlin.Platform.type
 import net.codinux.kotlin.PlatformType.*
 
 expect object Platform {
@@ -33,22 +32,22 @@ val Platform.isAndroid: Boolean
 val Platform.isJvmOrAndroid
     get() = isJvm || isAndroid
 
-val isJavaScript
-    get() = type == JavaScriptBrowser || type == JavaScriptNodeJS
+val Platform.isJavaScript
+    get() = type == JavaScriptBrowser || type == JavaScriptNodeJS || type == WasmJs
 
-val isNative
+val Platform.isNative
     get() = type == Linux || type == Windows || isDarwin
 
-val isLinuxOrMingw
+val Platform.isLinuxOrMingw
     get() = type == Linux || type == Windows
 
-val isDarwin
+val Platform.isDarwin
     get() = DarwinPlatforms.contains(type)
 
 /**
  * Alias for [isDarwin]
  */
-val isAppleOS
+val Platform.isAppleOS
     get() = isDarwin
 
 val Platform.isIOS: Boolean
