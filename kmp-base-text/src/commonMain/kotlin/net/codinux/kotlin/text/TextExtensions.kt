@@ -26,7 +26,7 @@ internal fun Int.signExtend(bits: Int): Int = (this shl (32 - bits)) shr (32 - b
 internal fun Int.mask(): Int = (1 shl this) - 1
 
 /** Extracts [count] bits at [offset] from [this] [Int] */
-internal fun Int.extract(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
+fun Int.extract(offset: Int, count: Int): Int = (this ushr offset) and count.mask()
 
 /** Extracts 8 bits at [offset] from [this] [Int] as [Byte] */
 internal fun Int.extractByte(offset: Int): Byte = (this ushr offset).toByte()
