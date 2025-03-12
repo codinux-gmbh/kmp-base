@@ -25,4 +25,7 @@ plugins {
 
 rootProject.name = "kmp-base-project"
 
+
 include("kmp-base")
+
+include("kmp-base-text")
