@@ -86,6 +86,8 @@ kotlin {
         commonTest.dependencies {
             implementation(kotlin("test"))
 
+            implementation(project(":kmp-base"))
+
             implementation("com.willowtreeapps.assertk:assertk:$assertKVersion")
         }
     }

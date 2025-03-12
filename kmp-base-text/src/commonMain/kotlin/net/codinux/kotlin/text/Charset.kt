@@ -45,6 +45,33 @@ abstract class Charset(val name: String) {
 
 	companion object {
 
+        private val platformCharsets by lazy { CharsetPlatform.availableCharsets }
+
+        val availableCharsets by lazy {
+            val charsets = platformCharsets.toMutableMap()
+
+            // ensure platform specific implementation of standard Charsets gets replaced by our implementation (TODO: sensful?)
+            Charsets.StandardCharsets.forEach { (name, charset) ->
+                charsets[name] = charset
+            }
+
+            charsets.toMap()
+        }
+
+        fun forName(charsetName: String): Charset? {
+            val normalizedName = charsetName.uppercase().replace("_", "").replace("-", "")
+            when (normalizedName) {
+                "ASCII", "USASCII" -> return Charsets.US_ASCII
+                "UTF8" -> return Charsets.UTF8
+                "UTF16", "UTF16LE" -> return Charsets.UTF16_LE
+                "UTF16BE" -> return Charsets.UTF16_BE
+                "ISO88591", "LATIN1" -> return Charsets.ISO_8859_1
+            }
+
+            return CharsetPlatform.forName(charsetName)
+                ?: CharsetPlatform.forName(normalizedName)
+		}
+
         inline fun decodeCodePoints(src: CharSequence, start: Int, end: Int, block: (codePoint: Int) -> Unit) {
             var highSurrogate = 0
             loop@for (n in start until end) {

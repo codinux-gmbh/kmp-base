@@ -1,5 +1,9 @@
 package net.codinux.kotlin.text
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
+import assertk.assertions.isGreaterThanOrEqualTo
+import assertk.assertions.isNull
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -50,6 +54,29 @@ class CharsetTest {
     }
 
     @Test
+    fun testCharsetForName() {
+        assertEquals(
+            """
+                US-ASCII
+                US-ASCII
+                UTF-8
+                UTF-16-LE
+                UTF-16-LE
+                UTF-16-BE
+                ISO-8859-1
+                ISO-8859-1
+            """.trimIndent(),
+            listOf("ASCII", "US-ASCII", "UTF-8", "UTF-16", "UTF-16-LE", "UTF-16-BE", "LATIN-1", "ISO-8859-1")
+                .joinToString("\n") { Charset.forName(it)!!.name }
+        )
+    }
+
+    @Test
+    fun testCharsetForName_UnknownCharset() {
+        assertThat(Charset.forName("MY-UNKNOWN-CHARSET")).isNull()
+    }
+
+    @Test
     fun testPartialDecode() {
         val charset = Charsets.UTF8
         val text = "hello你好"
@@ -70,6 +97,19 @@ class CharsetTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun availableCharsets() {
+        val availableCharsets = Charset.availableCharsets
+
+        assertThat(availableCharsets.size).isGreaterThanOrEqualTo(Charsets.StandardCharsets.size)
+
+        // assert availableCharsets contains all standard Charsets
+        Charsets.StandardCharsets.forEach { (name, charset) ->
+            assertThat(availableCharsets[name]).isEqualTo(charset)
+        }
+    }
+
 
 @OptIn(ExperimentalStdlibApi::class)
 val String.unhex get() = this.hexToByteArray()

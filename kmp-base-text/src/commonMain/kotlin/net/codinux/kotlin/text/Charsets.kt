@@ -16,4 +16,14 @@ object Charsets {
 
     val UTF16_BE by lazy { UTF16Charset(le = false) }
 
+    val StandardCharsets by lazy {
+        mapOf(
+            US_ASCII.name to US_ASCII,
+            ISO_8859_1.name to ISO_8859_1,
+            UTF8.name to UTF8,
+            UTF16_LE.name to UTF16_LE,
+            UTF16_BE.name to UTF16_BE
+        )
+    }
+
 }
