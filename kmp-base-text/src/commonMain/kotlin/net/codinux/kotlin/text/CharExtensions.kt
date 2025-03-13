@@ -13,5 +13,5 @@ fun Char.Companion.fromCodePoint(codePoint: Int): CharArray =
             val high = (((codePoint - 0x10000) ushr 10) and 0x3FF) + Char.MIN_HIGH_SURROGATE.code
             charArrayOf(high.toChar(), low.toChar())
         }
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException("codePoint must be between 0 and $MaxCodePoint but was $codePoint")
     }
