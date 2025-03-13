@@ -6,7 +6,7 @@ import assertk.assertions.isGreaterThanOrEqualTo
 import assertk.assertions.isNotNull
 import net.codinux.kotlin.Platform
 import net.codinux.kotlin.PlatformType
-import net.codinux.kotlin.extensions.containsNot
+import net.codinux.kotlin.collections.containsNot
 import net.codinux.kotlin.isAppleOS
 import net.codinux.kotlin.isLinuxOrMingw
 import kotlin.test.Test
