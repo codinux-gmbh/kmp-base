@@ -1,10 +1,10 @@
 package net.codinux.kotlin.text
 
 import net.codinux.kotlin.lang.ByteArrayBuilder
+import net.codinux.kotlin.lang.toByteArray
+import net.codinux.kotlin.lang.toUint8Array
 import org.khronos.webgl.ArrayBufferView
 import org.khronos.webgl.Uint8Array
-import org.khronos.webgl.get
-import org.khronos.webgl.set
 
 
 external class TextDecoder(charset: String) {
@@ -132,23 +132,4 @@ class JsCharset(name: String, private val encoder: TextEncoder, private val deco
     override fun hashCode(): Int = name.hashCode()
     override fun toString(): String = name
 
-}
-
-
-fun ByteArray.toUint8Array(): Uint8Array {
-    val uint8Array = Uint8Array(this.size)
-    this.indices.forEach { i ->
-        uint8Array[i] = this[i]
-    }
-
-    return uint8Array
-}
-
-fun Uint8Array.toByteArray(): ByteArray {
-    val byteArray = ByteArray(this.length)
-    byteArray.indices.forEach { i ->
-        byteArray[i] = this[i]
-    }
-
-    return byteArray
 }
