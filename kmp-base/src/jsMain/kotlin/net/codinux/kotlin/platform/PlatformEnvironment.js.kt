@@ -20,6 +20,13 @@ internal actual object PlatformEnvironment {
         }
     }
 
+    /**
+     * Tries to determine if the JavaScript code is minified.
+     *
+     * Not foolproof, makes educated guesses based on code minification.
+     */
+    val isMinified: Boolean by lazy { js("Function.prototype.toString.call(function () {}).length < 100") }
+
 
     actual fun getEnvironmentVariables(): Map<String, String> =
         if (Platform.isRunningInBrowser) {
