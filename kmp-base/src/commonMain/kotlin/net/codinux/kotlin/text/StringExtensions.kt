@@ -41,7 +41,7 @@ fun CharSequence.lastIndexOfOrNull(string: String, startIndex: Int = lastIndex, 
 /**
  * Finds all indices of [string] in this CharSequence
  */
-fun CharSequence.allIndicesOf(string: String): List<Int> {
+fun CharSequence.indicesOf(string: String): List<Int> {
     val indices = mutableListOf<Int>()
     var index = -1
 
@@ -84,7 +84,7 @@ inline fun String.toBase64(startIndex: Int = 0, endIndex: Int = this.length): St
 inline fun CharSequence.decodeBase64(startIndex: Int = 0, endIndex: Int = this.length): String = this.decodeBase64ToByteArray(startIndex, endIndex).decodeToString()
 
 
-fun String.countOccurrences(char: Char, startIndex: Int = 0, ignoreCase: Boolean = false): Int {
+fun String.count(char: Char, startIndex: Int = 0, ignoreCase: Boolean = false): Int {
     var count = 0
     var nextIndex = this.indexOfOrNull(char, startIndex, ignoreCase)
 
@@ -96,7 +96,7 @@ fun String.countOccurrences(char: Char, startIndex: Int = 0, ignoreCase: Boolean
     return count
 }
 
-fun String.countOccurrences(string: String, startIndex: Int = 0, ignoreCase: Boolean = false): Int {
+fun String.count(string: String, startIndex: Int = 0, ignoreCase: Boolean = false): Int {
     var count = 0
     var nextIndex = this.indexOfOrNull(string, startIndex, ignoreCase)
 
