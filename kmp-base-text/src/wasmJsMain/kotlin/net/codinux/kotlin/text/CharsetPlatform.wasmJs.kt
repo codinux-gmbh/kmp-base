@@ -17,6 +17,18 @@ external class TextEncoder(charset: String) {
     fun encode(data: String): Uint8Array
 }
 
+// Calling TextDecoder with an unsupported charsetName results in a JS RangeError, which cannot be caught with a Kotlin
+// try-catch clause (in Kotlin/JS we can use `catch(e: dynamic)`, but we cannot do that on Kotlin/WasmJS).
+// So create TextDecoder in JS and catch errors there:
+internal fun createTextDecoder(charsetName: String): TextDecoder? =
+    js("""{ try {
+        return new TextDecoder(charsetName);
+    } catch (e) {
+        console.log("Could not create TextDecoder for charset", charsetName, e)
+        return null;
+    } }""")
+
+
 internal actual object CharsetPlatform {
 
     /**
@@ -65,7 +77,7 @@ internal actual object CharsetPlatform {
         // Legacy multi-byte Korean encodings
         "EUC-KR" to listOf("cseuckr", "csksc56011987", "euc-kr", "iso-ir-149", "korean", "ks_c_5601-1987", "ks_c_5601-1989", "ksc5601", "ksc_5601", "windows-949"),
         // Legacy miscellaneous encodings
-        // "replacement" to listOf("csiso2022kr", "hz-gb-2312", "iso-2022-cn", "iso-2022-cn-ext", "iso-2022-kr", "replacement"), // in Kotlin 1.9 creating a TextDecoder with "replacement" throws an error (in Kotlin 2 it works)
+        "replacement" to listOf("csiso2022kr", "hz-gb-2312", "iso-2022-cn", "iso-2022-cn-ext", "iso-2022-kr", "replacement"), // in Kotlin 1.9 creating a TextDecoder with "replacement" throws an error (in Kotlin 2 it works)
         "UTF-16BE" to listOf("unicodefffe", "utf-16be"),
         "UTF-16LE" to listOf("csunicode", "iso-10646-ucs-2", "ucs-2", "unicode", "unicodefeff", "utf-16", "utf-16le"),
         "x-user-defined" to listOf("x-user-defined")
@@ -78,10 +90,14 @@ internal actual object CharsetPlatform {
     }
 
     actual fun forName(charsetName: String): Charset? = try {
-        val decoder = TextDecoder(charsetName)
-        val encoder = TextEncoder(charsetName)
+        val decoder = createTextDecoder(charsetName)
+        if (decoder == null) {
+            null
+        } else {
+            val encoder = TextEncoder(charsetName)
 
-        JsCharset(charsetName, encoder, decoder)
+            JsCharset(charsetName, encoder, decoder)
+        }
     } catch (ignored: Throwable) {
         null
     }
