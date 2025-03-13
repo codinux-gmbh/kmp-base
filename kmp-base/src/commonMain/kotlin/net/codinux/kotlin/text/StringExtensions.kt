@@ -1,4 +1,4 @@
-package net.codinux.kotlin.extensions
+package net.codinux.kotlin.text
 
 import net.codinux.kotlin.collections.decodeBase64ToByteArray
 import net.codinux.kotlin.collections.toBase64
