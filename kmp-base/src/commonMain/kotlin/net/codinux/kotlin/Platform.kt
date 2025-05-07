@@ -35,6 +35,9 @@ val Platform.isJvmOrAndroid
 val Platform.isJavaScript
     get() = type == JsBrowser || type == JsNodeJs || type == WasmJs
 
+val Platform.isBrowser // there is also Plaform.js.isRunningInBrowser
+    get() = type == JsBrowser || type == WasmJs
+
 val Platform.isNative
     get() = type == Linux || type == Windows || isDarwin
 

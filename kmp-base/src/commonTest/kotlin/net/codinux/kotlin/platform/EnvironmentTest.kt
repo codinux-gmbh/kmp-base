@@ -5,6 +5,7 @@ import assertk.assertions.isGreaterThan
 import assertk.assertions.isTrue
 import net.codinux.kotlin.Platform
 import net.codinux.kotlin.PlatformType
+import net.codinux.kotlin.isBrowser
 import kotlin.test.Test
 
 class EnvironmentTest {
@@ -17,7 +18,7 @@ class EnvironmentTest {
         println("${Platform.type} has ${underTest.variables.size} environment variables:")
 
         // browsers are sandboxed, they have no access to system's environment variables
-        if (Platform.type != PlatformType.JsBrowser && Platform.type != PlatformType.WasmJs) {
+        if (Platform.isBrowser == false) {
             assertThat(underTest.variables.size).isGreaterThan(20)
         }
     }
