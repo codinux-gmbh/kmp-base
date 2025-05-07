@@ -22,7 +22,7 @@ class EnvironmentTest {
 
     @Test
     fun isRunningTests() {
-        if (Platform.type != PlatformType.Linux) {
+        if (Platform.isNative == false) {
             assertThat(underTest.isRunningTests).isTrue()
         }
     }
