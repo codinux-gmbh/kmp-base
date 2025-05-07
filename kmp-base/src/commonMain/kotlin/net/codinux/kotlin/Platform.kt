@@ -21,7 +21,7 @@ expect object Platform {
 }
 
 
-private val DarwinPlatforms by lazy { setOf(macOS, iOS, tvOS, watchOS) }
+private val ApplePlatforms = setOf(macOS, iOS, tvOS, watchOS)
 
 val Platform.isJvm: Boolean
     get() = this.type == PlatformType.JVM
@@ -39,19 +39,13 @@ val Platform.isBrowser // there is also Plaform.js.isRunningInBrowser
     get() = type == JsBrowser || type == WasmJs
 
 val Platform.isNative
-    get() = type == Linux || type == Windows || isDarwin
+    get() = type == Linux || type == Windows || isAppleOS
 
 val Platform.isLinuxOrMingw
     get() = type == Linux || type == Windows
 
-val Platform.isDarwin
-    get() = DarwinPlatforms.contains(type)
-
-/**
- * Alias for [isDarwin]
- */
 val Platform.isAppleOS
-    get() = isDarwin
+    get() = ApplePlatforms.contains(type)
 
 val Platform.isIOS: Boolean
     get() = this.type == PlatformType.iOS
