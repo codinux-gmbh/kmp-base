@@ -1,4 +1,4 @@
-package net.codinux.kotlin
+package net.codinux.kotlin.platform
 
 import android.os.Build
 

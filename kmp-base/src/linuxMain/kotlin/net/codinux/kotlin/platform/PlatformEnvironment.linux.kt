@@ -9,7 +9,7 @@ internal actual object PlatformEnvironment {
 
     actual val isRunningTests = false // don't know how to get this in native mode
 
-    actual val isRunningInDebugMode = Platform.isDebugBinary
+    actual val isRunningInDebugMode = kotlin.native.Platform.isDebugBinary
 
 
     @OptIn(ExperimentalForeignApi::class)

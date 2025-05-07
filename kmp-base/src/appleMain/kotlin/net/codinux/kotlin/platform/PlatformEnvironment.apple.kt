@@ -9,7 +9,7 @@ internal actual object PlatformEnvironment {
     // TODO: does not work, XCTestConfigurationFilePath is never set when running tests with Gradle
     actual val isRunningTests = NSProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != null
 
-    actual val isRunningInDebugMode = Platform.isDebugBinary
+    actual val isRunningInDebugMode = kotlin.native.Platform.isDebugBinary
 
 
     actual fun getEnvironmentVariables(): Map<String, String> =

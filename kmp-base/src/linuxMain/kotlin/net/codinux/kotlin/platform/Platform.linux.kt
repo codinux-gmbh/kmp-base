@@ -1,4 +1,4 @@
-package net.codinux.kotlin
+package net.codinux.kotlin.platform
 
 import kotlinx.cinterop.*
 import platform.posix.uname

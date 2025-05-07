@@ -1,7 +1,5 @@
 package net.codinux.kotlin.platform
 
-import net.codinux.kotlin.Platform
-
 internal actual object PlatformEnvironment {
 
     actual val isRunningTests: Boolean by lazy {

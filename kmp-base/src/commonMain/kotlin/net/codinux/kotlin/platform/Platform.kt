@@ -1,6 +1,6 @@
-package net.codinux.kotlin
+package net.codinux.kotlin.platform
 
-import net.codinux.kotlin.PlatformType.*
+import net.codinux.kotlin.platform.PlatformType.*
 
 expect object Platform {
 

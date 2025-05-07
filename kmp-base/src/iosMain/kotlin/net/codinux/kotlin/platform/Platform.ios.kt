@@ -1,8 +1,8 @@
-package net.codinux.kotlin
+package net.codinux.kotlin.platform
 
 actual object Platform {
 
-    actual val type = PlatformType.watchOS
+    actual val type = PlatformType.iOS
 
 
     actual val lineSeparator = ApplePlatform.lineSeparator
@@ -10,7 +10,7 @@ actual object Platform {
     actual val fileSeparator = ApplePlatform.fileSeparator
 
 
-    actual val osName = "watchOS"
+    actual val osName = "iOS"
 
     actual val osVersion = ApplePlatform.osVersion
 

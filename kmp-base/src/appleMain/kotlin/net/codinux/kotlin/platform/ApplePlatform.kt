@@ -1,4 +1,4 @@
-package net.codinux.kotlin
+package net.codinux.kotlin.platform
 
 import platform.Foundation.NSProcessInfo
 import kotlin.experimental.ExperimentalNativeApi

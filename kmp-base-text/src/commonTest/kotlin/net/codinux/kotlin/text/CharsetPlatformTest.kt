@@ -4,11 +4,11 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isGreaterThanOrEqualTo
 import assertk.assertions.isNotNull
-import net.codinux.kotlin.Platform
-import net.codinux.kotlin.PlatformType
+import net.codinux.kotlin.platform.Platform
+import net.codinux.kotlin.platform.PlatformType
 import net.codinux.kotlin.collections.containsNot
-import net.codinux.kotlin.isAppleOS
-import net.codinux.kotlin.isLinuxOrMingw
+import net.codinux.kotlin.platform.isAppleOS
+import net.codinux.kotlin.platform.isLinuxOrMingw
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -1,6 +1,6 @@
 package net.codinux.kotlin.text
 
-import net.codinux.kotlin.Platform
+import net.codinux.kotlin.platform.Platform
 
 object LineSeparator {
 

@@ -1,6 +1,5 @@
 package net.codinux.kotlin.platform
 
-import net.codinux.kotlin.JavaPlatform
 import java.lang.management.ManagementFactory
 
 internal actual object JavaPlatformExpects {

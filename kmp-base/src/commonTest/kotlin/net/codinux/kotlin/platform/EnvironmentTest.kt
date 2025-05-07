@@ -3,9 +3,6 @@ package net.codinux.kotlin.platform
 import assertk.assertThat
 import assertk.assertions.isGreaterThan
 import assertk.assertions.isTrue
-import net.codinux.kotlin.Platform
-import net.codinux.kotlin.PlatformType
-import net.codinux.kotlin.isBrowser
 import kotlin.test.Test
 
 class EnvironmentTest {
