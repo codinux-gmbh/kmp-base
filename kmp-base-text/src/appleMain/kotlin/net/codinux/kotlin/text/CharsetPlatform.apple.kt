@@ -174,6 +174,7 @@ internal actual object CharsetPlatform {
 
 }
 
+@OptIn(UnsafeNumber::class)
 class FoundationCharset(name: String, private val stringEncoding: NSStringEncoding) : Charset(name) {
 
     override fun encode(out: ByteArrayBuilder, src: CharSequence, start: Int, end: Int) {
