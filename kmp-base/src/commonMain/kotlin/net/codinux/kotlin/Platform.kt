@@ -33,7 +33,7 @@ val Platform.isJvmOrAndroid
     get() = isJvm || isAndroid
 
 val Platform.isJavaScript
-    get() = type == JavaScriptBrowser || type == JavaScriptNodeJS || type == WasmJs
+    get() = type == JavaScriptBrowser || type == JavaScriptNodeJs || type == WasmJs
 
 val Platform.isNative
     get() = type == Linux || type == Windows || isDarwin
