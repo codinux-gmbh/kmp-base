@@ -2,9 +2,9 @@ package net.codinux.kotlin.text
 
 import kotlinx.cinterop.UnsafeNumber
 import net.codinux.kotlin.lang.ByteArrayBuilder
-import net.codinux.kotlin.platform.foundation.toByteArray
-import net.codinux.kotlin.platform.foundation.toNSData
-import net.codinux.kotlin.platform.foundation.toNSString
+import net.codinux.kotlin.platform.toByteArray
+import net.codinux.kotlin.platform.toNSData
+import net.codinux.kotlin.platform.toNSString
 import platform.Foundation.*
 
 @OptIn(UnsafeNumber::class)
