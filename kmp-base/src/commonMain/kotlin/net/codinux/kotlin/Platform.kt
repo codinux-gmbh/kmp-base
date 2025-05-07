@@ -55,3 +55,6 @@ val Platform.isAppleOS
 
 val Platform.isIOS: Boolean
     get() = this.type == PlatformType.iOS
+
+val Platform.isAndroidOrIOS: Boolean
+    get() = isAndroid || isIOS
