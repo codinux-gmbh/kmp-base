@@ -6,7 +6,7 @@ actual object Platform {
 
     val isRunningInBrowser: Boolean by lazy { js("typeof window !== 'undefined'") }
 
-    actual val type: PlatformType by lazy { if (isRunningInBrowser) PlatformType.JavaScriptBrowser else PlatformType.JavaScriptNodeJs }
+    actual val type: PlatformType by lazy { if (isRunningInBrowser) PlatformType.JsBrowser else PlatformType.JsNodeJs }
 
 
     val os = if (isRunningInBrowser) null else js("require('os')")

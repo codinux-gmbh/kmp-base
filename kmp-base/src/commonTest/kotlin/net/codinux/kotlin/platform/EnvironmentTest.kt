@@ -17,7 +17,7 @@ class EnvironmentTest {
         println("${Platform.type} has ${underTest.variables.size} environment variables:")
 
         // browsers are sandboxed, they have no access to system's environment variables
-        if (Platform.type != PlatformType.JavaScriptBrowser && Platform.type != PlatformType.WasmJs) {
+        if (Platform.type != PlatformType.JsBrowser && Platform.type != PlatformType.WasmJs) {
             assertThat(underTest.variables.size).isGreaterThan(20)
         }
     }

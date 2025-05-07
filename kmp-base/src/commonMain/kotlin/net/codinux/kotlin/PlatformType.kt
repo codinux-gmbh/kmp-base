@@ -4,8 +4,8 @@ enum class PlatformType {
 
     JVM,
     Android,
-    JavaScriptBrowser,
-    JavaScriptNodeJs,
+    JsBrowser,
+    JsNodeJs,
     WasmJs,
     Linux,
     Windows,
