@@ -163,8 +163,8 @@ internal actual object CharsetPlatform {
         "Symbol (Mac OS)" -> "x-MacSymbol"
         else -> {
             // extract charset name from e.g. Western (ASCII), Unicode (UTF-8), ...
-            val indexOfOpeningBrace = name.indexOfOrNull('(')
-            val indexOfClosingBrace = name.indexOfOrNull(')')
+            val indexOfOpeningBrace = name.indexOf('(').takeIf { it != -1 }
+            val indexOfClosingBrace = name.indexOf(')').takeIf { it != -1 }
 
             if (indexOfOpeningBrace != null && indexOfClosingBrace != null) {
                 name.substring(indexOfOpeningBrace + 1, indexOfClosingBrace)
