@@ -1,4 +1,4 @@
-@file:OptIn(UnsafeNumber::class, ExperimentalForeignApi::class)
+@file:OptIn(UnsafeNumber::class, ExperimentalForeignApi::class, BetaInteropApi::class)
 
 package net.codinux.kotlin.platform
 

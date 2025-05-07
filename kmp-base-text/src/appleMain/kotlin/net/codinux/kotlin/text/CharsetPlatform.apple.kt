@@ -1,5 +1,8 @@
+@file:OptIn(BetaInteropApi::class)
+
 package net.codinux.kotlin.text
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.UnsafeNumber
 import net.codinux.kotlin.lang.ByteArrayBuilder
 import net.codinux.kotlin.platform.toByteArray
