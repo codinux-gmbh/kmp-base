@@ -1,5 +1,3 @@
-@file:OptIn(UnsafeNumber::class)
-
 package net.codinux.kotlin.text
 
 import kotlinx.cinterop.UnsafeNumber
@@ -9,6 +7,7 @@ import net.codinux.kotlin.platform.foundation.toNSData
 import net.codinux.kotlin.platform.foundation.toNSString
 import platform.Foundation.*
 
+@OptIn(UnsafeNumber::class)
 internal actual object CharsetPlatform {
 
     private val platformEncodings = listOf(
