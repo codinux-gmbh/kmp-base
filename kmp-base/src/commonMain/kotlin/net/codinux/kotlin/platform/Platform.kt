@@ -32,8 +32,11 @@ val Platform.isAndroid: Boolean
 val Platform.isJvmOrAndroid
     get() = isJvm || isAndroid
 
+val Platform.isJsBrowserOrNodeJs
+    get() = type == JsBrowser || type == JsNodeJs
+
 val Platform.isJavaScript
-    get() = type == JsBrowser || type == JsNodeJs || type == WasmJs
+    get() = isJsBrowserOrNodeJs || type == WasmJs
 
 val Platform.isBrowser // there is also Plaform.js.isRunningInBrowser
     get() = type == JsBrowser || type == WasmJs
