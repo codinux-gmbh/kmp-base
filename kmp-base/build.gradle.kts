@@ -91,6 +91,8 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
 
+    val coroutinesVersion: String by project
+
     val jacksonVersion: String by project
 
     val assertKVersion: String by project
@@ -101,6 +103,8 @@ kotlin {
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
 
             implementation("com.willowtreeapps.assertk:assertk:$assertKVersion")
         }
