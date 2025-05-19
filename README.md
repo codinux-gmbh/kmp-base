@@ -10,9 +10,9 @@ Basic Kotlin Multiplatform functions and classes missing in the Kotlin StdLib.
 ### Gradle
 
 ```
-implementation("net.codinux.kotlin:kmp-base:1.5.1")
+implementation("net.codinux.kotlin:kmp-base:1.5.2")
 
-implementation("net.codinux.kotlin:kmp-base-text:1.5.1")
+implementation("net.codinux.kotlin:kmp-base-text:1.5.2")
 ```
 
 ### Maven
@@ -21,7 +21,7 @@ implementation("net.codinux.kotlin:kmp-base-text:1.5.1")
 <dependency>
    <groupId>net.codinux.kotlin</groupId>
    <artifactId>kmp-base-jvm</artifactId>
-   <version>1.5.1</version>
+   <version>1.5.2</version>
 </dependency>
 ```
 
